@@ -192,7 +192,7 @@ public class R70190PhenoTips1280DataMigration extends AbstractHibernateDataMigra
 
     private void setRejectedGenes(XWikiDocument doc, XWiki xwiki, DocumentReference rejectedGenesClassReference,
         DocumentReference geneClassReference, XWikiContext context, Session session, List<String> geneList)
-            throws HibernateException, XWikiException
+        throws HibernateException, XWikiException
     {
         List<BaseObject> genes = doc.getXObjects(rejectedGenesClassReference);
         for (BaseObject gene : genes) {
@@ -262,7 +262,7 @@ public class R70190PhenoTips1280DataMigration extends AbstractHibernateDataMigra
 
     private void updateComment(StringProperty oldGeneName, XWikiDocument doc,
         String commentUpend, DocumentReference geneClassReference, Session session, XWikiContext context)
-            throws HibernateException, XWikiException
+        throws HibernateException, XWikiException
     {
         List<BaseObject> genes = doc.getXObjects(geneClassReference);
         for (BaseObject gene : genes) {
