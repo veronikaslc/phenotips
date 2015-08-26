@@ -184,7 +184,7 @@ public class VariantListController extends AbstractComplexController<Map<String,
         String classification = "";
         switch (value) {
             case "complete":
-                classification = "Completel";
+                classification = "Complete";
                 break;
             case "in_progress":
                 classification = "In progress";
