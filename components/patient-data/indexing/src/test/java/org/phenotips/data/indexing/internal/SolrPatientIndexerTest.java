@@ -34,7 +34,6 @@ import org.phenotips.data.Patient;
 import org.phenotips.data.PatientRepository;
 import org.phenotips.data.indexing.PatientIndexer;
 import org.phenotips.data.internal.PhenoTipsFeature;
-import org.phenotips.data.internal.PhenoTipsPatient;
 import org.phenotips.data.permissions.PatientAccess;
 import org.phenotips.data.permissions.PermissionsManager;
 import org.phenotips.data.permissions.Visibility;
@@ -115,7 +114,7 @@ public class SolrPatientIndexerTest {
     public void indexDefaultBehaviourTest() throws IOException, SolrServerException {
 
         Set<Feature> patientFeatures = new HashSet<>();
-        Feature testFeature = mock(PhenoTipsFeature.class);
+        Feature testFeature = mock(Feature.class);
         patientFeatures.add(testFeature);
         DocumentReference reporterReference = new DocumentReference("xwiki", "XWiki", "user");
         PatientAccess patientAccess = mock(DefaultPatientAccess.class);
