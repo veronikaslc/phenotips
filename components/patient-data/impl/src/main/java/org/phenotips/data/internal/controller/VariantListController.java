@@ -30,6 +30,7 @@ import org.xwiki.model.reference.EntityReference;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -237,8 +238,8 @@ public class VariantListController extends AbstractComplexController<Map<String,
     {
         String classification = "";
         switch (value) {
-            case "denovo":
-                classification = "de novo";
+            case "denovo_germline":
+                classification = "de novo germline";
                 break;
             case "denovo_s_mosaicism":
                 classification = "de novo somatic mosaicism";
@@ -346,17 +347,15 @@ public class VariantListController extends AbstractComplexController<Map<String,
         return null;
     }
 
-    private void removeKeys(Map<String, String> item, List<String> keys, List<String> enablingProperties,
+    private void removeKeys(Map<String, String> item, List<String> keys, Map<String, String> enablingProperties,
         Collection<String> selectedFieldNames)
     {
-        int count = 0;
         for (String property : keys) {
             if (StringUtils.isBlank(item.get(property))
                 || (selectedFieldNames != null
-                && !selectedFieldNames.contains(enablingProperties.get(count)))) {
+                && !selectedFieldNames.contains(enablingProperties.get(property)))) {
                 item.remove(property);
             }
-            count++;
         }
     }
 
@@ -382,24 +381,28 @@ public class VariantListController extends AbstractComplexController<Map<String,
         JSONArray container = json.getJSONArray(getJsonPropertyName());
 
         List<String> keys =
-            Arrays.asList(GENESYMBOL_KEY, PROTEIN_KEY, TRANSCRIPT_KEY, DBSNP_KEY, EFFECT_KEY, INTERPRETATION_KEY,
+            Arrays.asList(GENESYMBOL_KEY, PROTEIN_KEY, TRANSCRIPT_KEY, DBSNP_KEY, ZYGOSITY_KEY, EFFECT_KEY,
+                INTERPRETATION_KEY,
                 INHERITANCE_KEY, EVIDENCE_KEY, SANGER_KEY,
                 RESOLUTION_KEY);
-        List<String> enablingProperties =
-            Arrays.asList(VARIANTS_GENESYMBOL_ENABLING_FIELD_NAME, VARIANTS_PROTEIN_ENABLING_FIELD_NAME,
-                VARIANTS_TRANSCRIPT_ENABLING_FIELD_NAME,
-                VARIANTS_DBSNP_ENABLING_FIELD_NAME, VARIANTS_ZYGOSITY_ENABLING_FIELD_NAME,
-                VARIANTS_EFFECT_ENABLING_FIELD_NAME, VARIANTS_INTERPRETATION_ENABLING_FIELD_NAME,
-                VARIANTS_INHERITANCE_ENABLING_FIELD_NAME,
-                VARIANTS_EVIDENCE_ENABLING_FIELD_NAME, VARIANTS_SEGREGATION_ENABLING_FIELD_NAME,
-                VARIANTS_SANGER_ENABLING_FIELD_NAME,
-                VARIANTS_RESOLUTION_ENABLING_FIELD_NAME);
+        Map<String, String> enablingPropertiesMap = new HashMap<String, String>();
+        enablingPropertiesMap.put(GENESYMBOL_KEY, VARIANTS_GENESYMBOL_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(PROTEIN_KEY, VARIANTS_PROTEIN_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(TRANSCRIPT_KEY, VARIANTS_TRANSCRIPT_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(DBSNP_KEY, VARIANTS_DBSNP_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(ZYGOSITY_KEY, VARIANTS_ZYGOSITY_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(EFFECT_KEY, VARIANTS_EFFECT_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(INTERPRETATION_KEY, VARIANTS_INTERPRETATION_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(INHERITANCE_KEY, VARIANTS_INHERITANCE_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(EVIDENCE_KEY, VARIANTS_EVIDENCE_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(SANGER_KEY, VARIANTS_SANGER_ENABLING_FIELD_NAME);
+        enablingPropertiesMap.put(RESOLUTION_KEY, VARIANTS_RESOLUTION_ENABLING_FIELD_NAME);
 
         while (iterator.hasNext()) {
             Map<String, String> item = iterator.next();
 
             if (!StringUtils.isBlank(item.get(VARIANT_KEY))) {
-                removeKeys(item, keys, enablingProperties, selectedFieldNames);
+                removeKeys(item, keys, enablingPropertiesMap, selectedFieldNames);
                 container.add(item);
             }
         }
