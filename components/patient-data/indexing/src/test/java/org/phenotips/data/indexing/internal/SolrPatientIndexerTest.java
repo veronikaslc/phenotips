@@ -5,6 +5,7 @@ import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.embedded.EmbeddedSolrServer;
 import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.core.CoreContainer;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -14,10 +15,15 @@ import org.phenotips.data.Feature;
 import org.phenotips.data.Patient;
 import org.phenotips.data.indexing.PatientIndexer;
 import org.phenotips.data.internal.PhenoTipsFeature;
+import org.phenotips.data.permissions.PatientAccess;
 import org.phenotips.data.permissions.PermissionsManager;
+import org.phenotips.data.permissions.Visibility;
+import org.phenotips.data.permissions.internal.DefaultPatientAccess;
+import org.phenotips.data.permissions.internal.visibility.PublicVisibility;
 import org.phenotips.vocabulary.SolrCoreContainerHandler;
 import org.slf4j.Logger;
 import org.xwiki.component.manager.ComponentLookupException;
+import org.xwiki.component.util.ReflectionUtils;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.test.mockito.MockitoComponentMockingRule;
 
@@ -62,37 +68,41 @@ public class SolrPatientIndexerTest {
 
         this.logger = this.mocker.getMockedLogger();
 
-        this.server = this.mocker.getInstance(SolrClient.class);
+        this.server = mock(SolrClient.class);
 
         this.permissions = this.mocker.getInstance(PermissionsManager.class);
 
         this.patient = mock(Patient.class);
 
+        doReturn(mock(CoreContainer.class)).when(this.cores).getContainer();
+
         this.solrPatientIndexer = (SolrPatientIndexer) this.mocker.getComponentUnderTest();
+        ReflectionUtils.setFieldValue(this.solrPatientIndexer, "server", this.server);
     }
 
     @Test
     public void indexDefaultBehaviour() throws IOException, SolrServerException {
 
-        DocumentReference reporterReference = mock(DocumentReference.class);
         Set<Feature> patientFeatures = new HashSet<>();
         Feature testFeature = mock(PhenoTipsFeature.class);
         patientFeatures.add(testFeature);
+        DocumentReference patientDocReference = new DocumentReference("wiki", "patient", "P0000001");
+        DocumentReference reporterReference = new DocumentReference("xwiki", "XWiki", "user");
+        PatientAccess patientAccess = mock(DefaultPatientAccess.class);
+        Visibility patientVisibility =  new PublicVisibility();
 
-        doReturn("patient document reference").when(this.patient).getDocument().toString();
+        doReturn(patientDocReference).when(this.patient).getDocument();
         doReturn(reporterReference).when(this.patient).getReporter();
-        doReturn("reporter reference").when(this.patient).getReporter().toString();
 
         doReturn(patientFeatures).when(this.patient).getFeatures();
         doReturn(true).when(testFeature).isPresent();
         doReturn("type").when(testFeature).getType();
         doReturn("id").when(testFeature).getId();
 
-        doReturn("visibility level").when(this.permissions).getPatientAccess(this.patient).getVisibility().getName();
-        doReturn("access level").when(this.permissions).getPatientAccess(this.patient).getVisibility().getPermissiveness();
+        doReturn(patientAccess).when(this.permissions).getPatientAccess(this.patient);
+        doReturn(patientVisibility).when(patientAccess).getVisibility();
 
         this.solrPatientIndexer.index(this.patient);
         verify(this.server).add(any(SolrInputDocument.class));
-
     }
 }
