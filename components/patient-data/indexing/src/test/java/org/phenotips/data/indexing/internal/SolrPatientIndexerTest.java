@@ -69,7 +69,6 @@ public class SolrPatientIndexerTest {
 
     private SolrPatientIndexer solrPatientIndexer;
 
-    @Mock
     private SolrCoreContainerHandler cores;
 
     @Mock
@@ -81,13 +80,10 @@ public class SolrPatientIndexerTest {
     @Mock
     private SolrClient server;
 
-    @Mock
     private QueryManager qm;
 
-    @Mock
     private PatientRepository patientRepository;
 
-    @Mock
     private PermissionsManager permissions;
 
     private DocumentReference patientDocReference;
@@ -101,15 +97,11 @@ public class SolrPatientIndexerTest {
 
         this.logger = this.mocker.getMockedLogger();
 
-        this.server = mock(SolrClient.class);
-
         this.permissions = this.mocker.getInstance(PermissionsManager.class);
 
         this.qm = this.mocker.getInstance(QueryManager.class);
 
         this.patientRepository = this.mocker.getInstance(PatientRepository.class);
-
-        this.patient = mock(PhenoTipsPatient.class);
 
         this.patientDocReference = new DocumentReference("wiki", "patient", "P0000001");
 

@@ -17,25 +17,22 @@
  */
 package org.phenotips.data.indexing.internal;
 
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
 import org.phenotips.data.Patient;
 import org.phenotips.data.events.PatientDeletedEvent;
-import org.phenotips.data.events.PatientDeletingEvent;
 import org.phenotips.data.events.PatientEvent;
 import org.phenotips.data.indexing.PatientIndexer;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.observation.EventListener;
 import org.xwiki.observation.event.Event;
 import org.xwiki.test.mockito.MockitoComponentMockingRule;
-
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-
 
 public class PatientEventListenerTest {
 
