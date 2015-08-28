@@ -34,6 +34,7 @@ import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.query.Query;
 import org.xwiki.query.QueryException;
 import org.xwiki.query.QueryManager;
+import org.xwiki.query.internal.DefaultQuery;
 import org.xwiki.test.mockito.MockitoComponentMockingRule;
 import org.slf4j.Logger;
 import org.apache.solr.client.solrj.SolrClient;
@@ -288,6 +289,50 @@ public class SolrPatientIndexerTest {
 
         verify(this.server).deleteByQuery("*:*");
         verify(this.server).commit();
+
+    }
+
+    @Test
+    public void reindexSolrServerException() throws QueryException, IOException, SolrServerException {
+        List<String> patientDocs = new ArrayList<>();
+        patientDocs.add("P0000001");
+
+        Query testQuery = mock(Query.class);
+        doReturn(testQuery).when(this.qm).createQuery("from doc.object(PhenoTips.PatientClass) as patient", Query.XWQL);
+        doReturn(patientDocs).when(testQuery).execute();
+
+        doThrow(new SolrServerException("deleteByQuery failed")).when(this.server).deleteByQuery("*:*");
+
+        this.solrPatientIndexer.reindex();
+
+        verify(this.logger).warn("Failed to reindex patients: {}", "deleteByQuery failed");
+    }
+
+    @Test
+    public void reindexIOException() throws QueryException, IOException, SolrServerException {
+        List<String> patientDocs = new ArrayList<>();
+        patientDocs.add("P0000001");
+
+        Query testQuery = mock(Query.class);
+        doReturn(testQuery).when(this.qm).createQuery("from doc.object(PhenoTips.PatientClass) as patient", Query.XWQL);
+        doReturn(patientDocs).when(testQuery).execute();
+
+        doThrow(new IOException("deleteByQuery failed")).when(this.server).deleteByQuery("*:*");
+
+        this.solrPatientIndexer.reindex();
+
+        verify(this.logger).warn("Error occurred while reindexing patients: {}", "deleteByQuery failed");
+    }
+
+    @Test
+    public void reindexQueryException() throws QueryException, IOException, SolrServerException {
+
+        doThrow(new QueryException("createQuery failed", null, null))
+                .when(this.qm).createQuery("from doc.object(PhenoTips.PatientClass) as patient", Query.XWQL);
+
+        this.solrPatientIndexer.reindex();
+
+        verify(this.logger).warn("Failed to search patients for reindexing: {}", "createQuery failed");
 
     }
 }
