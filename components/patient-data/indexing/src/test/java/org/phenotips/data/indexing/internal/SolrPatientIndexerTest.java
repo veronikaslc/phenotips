@@ -70,15 +70,15 @@ public class SolrPatientIndexerTest {
     public MockitoComponentMockingRule<PatientIndexer> mocker =
             new MockitoComponentMockingRule<PatientIndexer>(SolrPatientIndexer.class);
 
-    private SolrPatientIndexer solrPatientIndexer;
-
-    private Logger logger;
-
     @Mock
     private Patient patient;
 
     @Mock
     private SolrClient server;
+
+    private SolrPatientIndexer solrPatientIndexer;
+
+    private Logger logger;
 
     private QueryManager qm;
 
@@ -236,6 +236,24 @@ public class SolrPatientIndexerTest {
         verify(this.server).deleteByQuery("document:"
                 + ClientUtils.escapeQueryChars(this.patientDocReference.toString()));
         verify(this.server).commit();
+    }
+
+    @Test
+    public void deleteThrowsSolrException() throws IOException, SolrServerException {
+
+        doReturn(this.patientDocReference).when(this.patient).getDocument();
+        doThrow(new SolrServerException("commit failed")).when(this.server).commit();
+        this.solrPatientIndexer.delete(this.patient);
+        verify(this.logger).warn("Failed to delete from Solr: {}", "commit failed");
+    }
+
+    @Test
+    public void deleteThrowsIOException() throws IOException, SolrServerException {
+
+        doReturn(this.patientDocReference).when(this.patient).getDocument();
+        doThrow(new IOException("commit failed")).when(this.server).commit();
+        this.solrPatientIndexer.delete(this.patient);
+        verify(this.logger).warn("Error occurred while deleting Solr documents: {}", "commit failed");
     }
 
     @Test
