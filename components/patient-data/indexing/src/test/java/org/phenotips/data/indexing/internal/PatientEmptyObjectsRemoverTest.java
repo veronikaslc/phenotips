@@ -30,12 +30,7 @@ import java.util.List;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.anyObject;
-import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -90,11 +85,48 @@ public class PatientEmptyObjectsRemoverTest {
     @Test
     public void emptyObjectRemovedTest() throws XWikiException {
 
+        BaseObject objOne = mock(BaseObject.class);
+        BaseObject objTwo = mock(BaseObject.class);
+        xWikiObjects.add(objOne);
+        xWikiObjects.add(objTwo);
+
+        BaseStringProperty property = mock(BaseStringProperty.class);
+        doReturn(property).when(objOne).getField(anyString());
+        doReturn(property).when(objTwo).getField(anyString());
+        doReturn("").when(property).getValue();
+
+        this.patientEmptyObjectsRemover.onEvent(mock(Event.class), xWikiDocument, mock(Object.class));
+        verify(this.xWikiDocument, times(4)).removeXObject((BaseObject) anyObject());
+        verify(this.xWiki, times(4)).saveDocument(this.xWikiDocument, "Removed empty object", true, this.context);
+    }
+
+    @Test
+    public void onEventCatchesXWikiExceptionTest() throws XWikiException {
+
         BaseObject obj = mock(BaseObject.class);
         xWikiObjects.add(obj);
+        XWiki wiki = this.context.getWiki();
+
         BaseStringProperty property = mock(BaseStringProperty.class);
         doReturn(property).when(obj).getField(anyString());
         doReturn("").when(property).getValue();
+
+        doThrow(new XWikiException()).when(wiki).saveDocument(xWikiDocument, "Removed empty object", true, this.context);
+
+        this.patientEmptyObjectsRemover.onEvent(mock(Event.class), xWikiDocument, mock(Object.class));
+    }
+
+    @Test
+    public void onEventIgnoresNullObjectsTest() throws XWikiException {
+
+        BaseObject obj = mock(BaseObject.class);
+        xWikiObjects.add(null);
+        xWikiObjects.add(obj);
+
+        BaseStringProperty property = mock(BaseStringProperty.class);
+        doReturn(property).when(obj).getField(anyString());
+        doReturn("").when(property).getValue();
+
 
         this.patientEmptyObjectsRemover.onEvent(mock(Event.class), xWikiDocument, mock(Object.class));
         verify(this.xWikiDocument, times(2)).removeXObject((BaseObject) anyObject());
@@ -102,7 +134,9 @@ public class PatientEmptyObjectsRemoverTest {
     }
 
     @Test
-    public void exitOnNullObjectTest() {
+    public void onEventIgnoresEmptyListTest() throws XWikiException {
+        xWikiObjects = null;
+
         this.patientEmptyObjectsRemover.onEvent(mock(Event.class), xWikiDocument, mock(Object.class));
         verify(this.xWikiDocument, never()).removeXObject((BaseObject) anyObject());
     }
