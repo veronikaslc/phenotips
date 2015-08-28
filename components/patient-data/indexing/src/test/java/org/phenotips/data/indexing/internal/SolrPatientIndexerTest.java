@@ -17,18 +17,6 @@
  */
 package org.phenotips.data.indexing.internal;
 
-import org.apache.solr.client.solrj.SolrClient;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.UpdateResponse;
-import org.apache.solr.client.solrj.util.ClientUtils;
-import org.apache.solr.common.SolrInputDocument;
-import org.apache.solr.core.CoreContainer;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-import org.mockito.internal.matchers.CapturingMatcher;
 import org.phenotips.data.Feature;
 import org.phenotips.data.Patient;
 import org.phenotips.data.PatientRepository;
@@ -40,7 +28,6 @@ import org.phenotips.data.permissions.Visibility;
 import org.phenotips.data.permissions.internal.DefaultPatientAccess;
 import org.phenotips.data.permissions.internal.visibility.PublicVisibility;
 import org.phenotips.vocabulary.SolrCoreContainerHandler;
-import org.slf4j.Logger;
 import org.xwiki.component.manager.ComponentLookupException;
 import org.xwiki.component.util.ReflectionUtils;
 import org.xwiki.model.reference.DocumentReference;
@@ -48,17 +35,34 @@ import org.xwiki.query.Query;
 import org.xwiki.query.QueryException;
 import org.xwiki.query.QueryManager;
 import org.xwiki.test.mockito.MockitoComponentMockingRule;
+import org.slf4j.Logger;
+import org.apache.solr.client.solrj.SolrClient;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.UpdateResponse;
+import org.apache.solr.client.solrj.util.ClientUtils;
+import org.apache.solr.common.SolrInputDocument;
+import org.apache.solr.core.CoreContainer;
+import org.junit.Before;
+import org.junit.Rule;
+import org.junit.Test;
+import org.junit.Assert;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.mockito.internal.matchers.CapturingMatcher;
 
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.argThat;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.doThrow;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import org.junit.Assert;
-
-
-import static org.mockito.Mockito.*;
 
 public class SolrPatientIndexerTest {
 
@@ -68,9 +72,6 @@ public class SolrPatientIndexerTest {
 
     private SolrPatientIndexer solrPatientIndexer;
 
-    private SolrCoreContainerHandler cores;
-
-    @Mock
     private Logger logger;
 
     @Mock
@@ -92,9 +93,7 @@ public class SolrPatientIndexerTest {
 
         MockitoAnnotations.initMocks(this);
 
-        this.cores = this.mocker.getInstance(SolrCoreContainerHandler.class);
-
-        this.logger = this.mocker.getMockedLogger();
+        SolrCoreContainerHandler cores = this.mocker.getInstance(SolrCoreContainerHandler.class);
 
         this.permissions = this.mocker.getInstance(PermissionsManager.class);
 
@@ -104,9 +103,12 @@ public class SolrPatientIndexerTest {
 
         this.patientDocReference = new DocumentReference("wiki", "patient", "P0000001");
 
-        doReturn(mock(CoreContainer.class)).when(this.cores).getContainer();
+        doReturn(mock(CoreContainer.class)).when(cores).getContainer();
 
         this.solrPatientIndexer = (SolrPatientIndexer) this.mocker.getComponentUnderTest();
+
+        this.logger = this.mocker.getMockedLogger();
+
         ReflectionUtils.setFieldValue(this.solrPatientIndexer, "server", this.server);
     }
 
@@ -120,7 +122,7 @@ public class SolrPatientIndexerTest {
         PatientAccess patientAccess = mock(DefaultPatientAccess.class);
         Visibility patientVisibility =  new PublicVisibility();
 
-        CapturingMatcher<SolrInputDocument> capturedArgument = new CapturingMatcher<SolrInputDocument>();
+        CapturingMatcher<SolrInputDocument> capturedArgument = new CapturingMatcher<>();
         when(this.server.add(argThat(capturedArgument))).thenReturn(mock(UpdateResponse.class));
 
         doReturn(patientDocReference).when(this.patient).getDocument();
@@ -143,6 +145,35 @@ public class SolrPatientIndexerTest {
     }
 
     @Test
+    public void indexThrowsSolrException() throws IOException, SolrServerException {
+
+        Set<Feature> patientFeatures = new HashSet<>();
+        Feature testFeature = mock(Feature.class);
+        patientFeatures.add(testFeature);
+        DocumentReference reporterReference = new DocumentReference("xwiki", "XWiki", "user");
+        PatientAccess patientAccess = mock(DefaultPatientAccess.class);
+        Visibility patientVisibility =  new PublicVisibility();
+
+        doReturn(patientDocReference).when(this.patient).getDocument();
+        doReturn(reporterReference).when(this.patient).getReporter();
+
+        doReturn(patientFeatures).when(this.patient).getFeatures();
+        doReturn(true).when(testFeature).isPresent();
+        doReturn("type").when(testFeature).getType();
+        doReturn("id").when(testFeature).getId();
+
+        doReturn(patientAccess).when(this.permissions).getPatientAccess(this.patient);
+        doReturn(patientVisibility).when(patientAccess).getVisibility();
+        doThrow(new SolrServerException("Error while adding SolrInputDocument")).when(this.server).add(any(SolrInputDocument.class));
+
+        this.solrPatientIndexer.index(this.patient);
+
+        verify(this.logger).warn("Failed to perform Solr search: {}", "Error while adding SolrInputDocument");
+    }
+
+
+
+    @Test
     public void deleteDefaultBehaviourTest() throws IOException, SolrServerException {
 
         doReturn(this.patientDocReference).when(this.patient).getDocument();
@@ -154,7 +185,7 @@ public class SolrPatientIndexerTest {
 
     @Test
     public void reindexDefaultBehaviour() throws QueryException, IOException, SolrServerException {
-        List<String> patientDocs = new ArrayList<String>();
+        List<String> patientDocs = new ArrayList<>();
         patientDocs.add("P0000001");
 
         Query testQuery = mock(Query.class);
@@ -163,7 +194,7 @@ public class SolrPatientIndexerTest {
         doReturn(this.patient).when(this.patientRepository).getPatientById("P0000001");
 
         Set<Feature> patientFeatures = new HashSet<>();
-        Feature testFeature = mock(PhenoTipsFeature.class);
+        Feature testFeature = mock(Feature.class);
         patientFeatures.add(testFeature);
         DocumentReference reporterReference = new DocumentReference("xwiki", "XWiki", "user");
         PatientAccess patientAccess = mock(DefaultPatientAccess.class);
