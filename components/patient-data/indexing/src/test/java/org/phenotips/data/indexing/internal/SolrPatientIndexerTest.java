@@ -171,7 +171,62 @@ public class SolrPatientIndexerTest {
         verify(this.logger).warn("Failed to perform Solr search: {}", "Error while adding SolrInputDocument");
     }
 
+    @Test
+    public void indexThrowsIOException() throws IOException, SolrServerException {
 
+        Set<Feature> patientFeatures = new HashSet<>();
+        Feature testFeature = mock(Feature.class);
+        patientFeatures.add(testFeature);
+        DocumentReference reporterReference = new DocumentReference("xwiki", "XWiki", "user");
+        PatientAccess patientAccess = mock(DefaultPatientAccess.class);
+        Visibility patientVisibility =  new PublicVisibility();
+
+        doReturn(patientDocReference).when(this.patient).getDocument();
+        doReturn(reporterReference).when(this.patient).getReporter();
+
+        doReturn(patientFeatures).when(this.patient).getFeatures();
+        doReturn(true).when(testFeature).isPresent();
+        doReturn("type").when(testFeature).getType();
+        doReturn("id").when(testFeature).getId();
+
+        doReturn(patientAccess).when(this.permissions).getPatientAccess(this.patient);
+        doReturn(patientVisibility).when(patientAccess).getVisibility();
+        doThrow(new IOException("Error while adding SolrInputDocument")).when(this.server).add(any(SolrInputDocument.class));
+
+        this.solrPatientIndexer.index(this.patient);
+
+        verify(this.logger).warn("Error occurred while performing Solr search: {}",
+                "Error while adding SolrInputDocument");
+    }
+
+    @Test
+    public void indexGetReporterIsNull() throws IOException, SolrServerException {
+
+        Set<Feature> patientFeatures = new HashSet<>();
+        Feature testFeature = mock(Feature.class);
+        patientFeatures.add(testFeature);
+        PatientAccess patientAccess = mock(DefaultPatientAccess.class);
+        Visibility patientVisibility =  new PublicVisibility();
+
+        CapturingMatcher<SolrInputDocument> capturedArgument = new CapturingMatcher<>();
+        when(this.server.add(argThat(capturedArgument))).thenReturn(mock(UpdateResponse.class));
+
+        doReturn(patientDocReference).when(this.patient).getDocument();
+        doReturn(null).when(this.patient).getReporter();
+
+        doReturn(patientFeatures).when(this.patient).getFeatures();
+        doReturn(true).when(testFeature).isPresent();
+        doReturn("type").when(testFeature).getType();
+        doReturn("id").when(testFeature).getId();
+
+        doReturn(patientAccess).when(this.permissions).getPatientAccess(this.patient);
+        doReturn(patientVisibility).when(patientAccess).getVisibility();
+
+        this.solrPatientIndexer.index(this.patient);
+        SolrInputDocument inputDoc = capturedArgument.getLastValue();
+        verify(this.server).add(inputDoc);
+        Assert.assertEquals(inputDoc.getFieldValue("reporter"), "");
+    }
 
     @Test
     public void deleteDefaultBehaviourTest() throws IOException, SolrServerException {
