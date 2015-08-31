@@ -58,8 +58,6 @@ public class PatientEmptyObjectsRemoverTest {
     @Mock
     private ExecutionContext executionContext;
 
-    private Execution execution;
-
     private PatientEmptyObjectsRemover patientEmptyObjectsRemover;
 
     private List<BaseObject> xWikiObjects;
@@ -73,12 +71,12 @@ public class PatientEmptyObjectsRemoverTest {
         MockitoAnnotations.initMocks(this);
         this.patientEmptyObjectsRemover = (PatientEmptyObjectsRemover) this.mocker.getComponentUnderTest();
 
-        this.execution = this.mocker.getInstance(Execution.class);
+        Execution execution = this.mocker.getInstance(Execution.class);
 
-        doReturn(this.executionContext).when(this.execution).getContext();
+        doReturn(this.executionContext).when(execution).getContext();
         doReturn(this.context).when(this.executionContext).getProperty("xwikicontext");
         doReturn(this.xWiki).when(this.context).getWiki();
-        xWikiObjects = new ArrayList<BaseObject>();
+        xWikiObjects = new ArrayList<>();
         doReturn(xWikiObjects).when(xWikiDocument).getXObjects(any(EntityReference.class));
     }
 
