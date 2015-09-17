@@ -69,9 +69,9 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 ##
 ##
 #macro(__variant_head_empty $classname $options)##
-#set($count = 'VARIANT_COUNT_PLACEHOLDER')
-#set($geneObjNumber = 'GENE_INDEX_PLACEHOLDER')
-#set($geneName = 'GENE_SYMBOL_PLACEHOLDER')
+#set($count = 'ZZVARIANT_COUNT_PLACEHOLDERZZ')
+#set($geneObjNumber = 'ZZGENE_INDEX_PLACEHOLDERZZ')
+#set($geneName = 'ZZGENE_SYMBOL_PLACEHOLDERZZ')
 |(%class="pseudoindent"%) ##
 |=(% colspan="4" class="variant variant-title gene-$geneObjNumber" %) $services.localization.render("${classname}.variantTable.title", [$geneName, $count]) \\
 (%class="variant-gene-$geneObjNumber variant-title-row variant-hide-heading-$geneObjNumber"%)##
@@ -100,9 +100,9 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 ##
 #macro (__variant_row_empty $variantClassName $geneObjNumber $options)##
 #set($fakeObj = $doc.newObject($variantClassName))
-#set($variantIndex = 'VARIANT_INDEX_PLACEHOLDER')
-#set($geneObjNumber = 'GENE_INDEX_PLACEHOLDER')
-#set($count = 'VRCOUNT_PLACEHOLDER')
+#set($variantIndex = 'ZZVARIANT_INDEX_PLACEHOLDERZZ')
+#set($geneObjNumber = 'ZZGENE_INDEX_PLACEHOLDERZZ')
+#set($count = 'ZZVRCOUNT_PLACEHOLDERZZ')
 |(% class="v-collapsed" %) $doc.display('genesymbol', $options.mode, $fakeObj)##
 |(% class="pseudoindent" %) ##
 |(% class="variant-row-count variant-${variantIndex} variant" %)$count##
@@ -163,6 +163,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
 ##
 ##
 ##
+##
 #macro(__variant_table $variantObjects $geneNumber $geneObjNumber $options $genesymbol $variantClassName)##
 #if ($variantObjects.size() > 0)##
 (%class="variant-gene-$geneObjNumber variant-title-row"%)#__variant_head($variantObjects.size() $geneObjNumber $genesymbol $variantClassName $options)
@@ -206,9 +207,9 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
 ##
 #macro (__gene_row_empty $geneClassName $variantClassName $options)##
 #set($fakeObj = $doc.newObject($geneClassName))
-#set($geneNumber = 'GENE_NUMBER_PLACEHOLDER')
-#set($geneObjNumber = 'GENE_INDEX_PLACEHOLDER')
-#set($genesymbol = 'GENE_SYMBOL_PLACEHOLDER')
+#set($geneNumber = 'ZZGENE_NUMBER_PLACEHOLDERZZ')
+#set($geneObjNumber = 'ZZGENE_INDEX_PLACEHOLDERZZ')
+#set($genesymbol = 'ZZGENE_SYMBOL_PLACEHOLDERZZ')
 |(% class="row-count" %)$geneNumber ##
 #foreach($prop in $xwiki.getDocument($geneClassName).xWikiClass.properties)
  |(% class="$prop.translatedPrettyName gene gene-$geneObjNumber" ##
@@ -234,7 +235,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
 #__gene_row($o $geneNumber $variantClass $options)
 #end
 #if ($options.mode == 'edit')
-#set($geneIndexPlaceholder = 'GENE_INDEX_PLACEHOLDER')
+#set($geneIndexPlaceholder = 'ZZGENE_INDEX_PLACEHOLDERZZ')
 #__gene_row_empty($geneClassName $variantClassName $options)
 (%class="variant-gene-$geneIndexPlaceholder variant-title-row"%)#__variant_head_empty($variantClassName $options)
 (%class="variant-gene-$geneIndexPlaceholder variant-hide-heading-$geneIndexPlaceholder"%)#__variant_row_empty($variantClassName $options)##
@@ -354,7 +355,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
       
       //if edit mode
       if (!!$('inline')) {
-
+        this.warnSaving = false;
         this.areaEditDataListenerArray = [];
         this.getNewRowsTemplates();
         this.createEditButtons('.variant-moreinfo-editbutton-row');
@@ -399,18 +400,26 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
       }
     },
     
-    getNewRowsTemplates  : function () {
-      var sizep = $$('.variant-gene-GENE_INDEX_PLACEHOLDER').size();
-      this.newGeneRowElement = $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[0].previous();
-      this.addVariantButtonElement = $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[sizep-5];
-      this.variantHeaderElement_0 = $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[sizep-4];
-      this.variantHeaderElement_1 = $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[sizep-3];
-      this.newVariantRowElement = $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[sizep-2];
-      this.newMoreInfoElement = $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[sizep-1];
-      $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[0].previous().remove();
-      $$('.variant-gene-GENE_INDEX_PLACEHOLDER').each(function(item) {
+     getNewRowsTemplates  : function () {
+      var sizep = $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ').size();
+      var geneRowTemplateEl = $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ')[0].previous();
+      var buttonRowTemplateEl = $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ')[sizep-5];
+      var varHeader_0_TemplateEl = $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ')[sizep-4];
+      var varHeader_1_TemplateEl = $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ')[sizep-3];
+      var varRowTemplateEl = $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ')[sizep-2];
+      var varMoreInfoTemplateEl = $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ')[sizep-1];
+      $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ')[0].previous().remove();
+      $$('.variant-gene-ZZGENE_INDEX_PLACEHOLDERZZ').each(function(item) {
         item.remove();
       });
+      //making templates
+      var syntax = /(^|.|\r|\n)(ZZ(\w+)ZZ)/;
+      this.geneRowTemplate = new Template(geneRowTemplateEl.innerHTML, syntax);
+      this.addVariantButtonTemplate = new Template(buttonRowTemplateEl.innerHTML, syntax);
+      this.variantHeaderTemplate_0  = new Template(varHeader_0_TemplateEl.innerHTML, syntax);
+      this.variantHeaderTemplate_1  = new Template(varHeader_1_TemplateEl.innerHTML, syntax);
+      this.variantRowTemplate  = new Template(varRowTemplateEl.innerHTML, syntax);
+      this.moreInfoSectionTemplate = new Template(varMoreInfoTemplateEl.innerHTML, syntax);
     },
     
     ajaxDeleteGeneData : function (event) {
@@ -461,6 +470,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
     
     ajaxAddGeneData : function (event) {
       event.stop();
+
       var addTrigger = event.element();
       if (addTrigger.disabled) {
         return;
@@ -471,46 +481,27 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
         new XWiki.widgets.Notification("$services.localization.render('phenotips.tableMacros.listNotFound')", 'error');
       }
       
-      var geneRowTemplateEl = this.newGeneRowElement;
-      var buttonRowTemplateEl = this.addVariantButtonElement;
-
       var idx = dataTable.select('td.row-count').size() + 1;
       var geneIndex = 0;
-      if (dataTable.select('td.row-count').size() &gt; 0) {
+      if (dataTable.select('td.row-count').size() > 0) {
         var className = dataTable.select('td.row-count')[idx - 2].next().className;
         geneIndex = parseInt(className.substring(className.lastIndexOf('-')+1), 10) + 1;
       }
 
       var newGeneRow = new Element('tr');
       var newButtonRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-footer v-collapsed'});
-  
-      var geneRowInner = geneRowTemplateEl.innerHTML.replace(/GENE_NUMBER_PLACEHOLDER|GENE_INDEX_PLACEHOLDER|_\d+_|=\d+&amp;/g, function (placeholder) {
+
+      var data = {GENE_NUMBER_PLACEHOLDER: idx, GENE_INDEX_PLACEHOLDER: geneIndex};
+      var buttonRowInner = this.addVariantButtonTemplate.evaluate(data);
+      var geneRowInner = this.geneRowTemplate.evaluate(data);
+      
+      geneRowInner = geneRowInner.replace(/_\d+_|=\d+&amp;/g, function (placeholder) {
         switch(true) {
-          case /GENE_NUMBER_PLACEHOLDER/.test(placeholder):
-            return idx;
-            break;
-          case /GENE_INDEX_PLACEHOLDER/.test(placeholder):
-            return geneIndex;
-            break;
           case /_\d+_/.test(placeholder):
             return '_'+geneIndex+'_';
             break;
           case /=\d+&amp;/.test(placeholder):
             return '_'+geneIndex+'_';
-            break;
-          default:
-            return "";
-            break;
-        }
-      });
-      
-      var buttonRowInner = buttonRowTemplateEl.innerHTML.replace( /GENE_NUMBER_PLACEHOLDER|GENE_INDEX_PLACEHOLDER/g, function (placeholder) {
-        switch(true) {
-          case /GENE_NUMBER_PLACEHOLDER/.test(placeholder):
-            return idx;
-            break;
-          case /GENE_INDEX_PLACEHOLDER/.test(placeholder):
-            return geneIndex;
             break;
           default:
             return "";
@@ -625,36 +616,19 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
         varIndex = Math.max(indx, varIndex);
       });
       varIndex++;
+      
 
-      var evaluateTemplate = function evaluateTemplate(placeholder) {
-        switch(true) {
-          case /GENE_SYMBOL_PLACEHOLDER/.test(placeholder):
-            return geneSymbol;
-            break;
-          case /VARIANT_COUNT_PLACEHOLDER/.test(placeholder):
-            return varCount;
-            break;
-          case /GENE_INDEX_PLACEHOLDER/.test(placeholder):
-            return geneIndex;
-            break;
-          default:
-            return "";
-            break;
-        }
-      }
+      var data = {GENE_SYMBOL_PLACEHOLDER: geneSymbol, VARIANT_COUNT_PLACEHOLDER: varCount, GENE_INDEX_PLACEHOLDER: geneIndex, VARIANT_INDEX_PLACEHOLDER: varIndex}
       
       //If we insert first row of variants - create headers
       if (variantFooter.previous().className == '') {
-        var varHeader_0_TemplateEl = this.variantHeaderElement_0;
-        
-        var varHeader_0_Inner = varHeader_0_TemplateEl.innerHTML.replace(/GENE_SYMBOL_PLACEHOLDER|VARIANT_COUNT_PLACEHOLDER|GENE_INDEX_PLACEHOLDER/g, function (placeholder){return evaluateTemplate(placeholder)});
-    
+
+        var varHeader_0_Inner = this.variantHeaderTemplate_0.evaluate(data);
         var newVariantHeader_0 = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-title-row'});
         newVariantHeader_0.update(varHeader_0_Inner);
         variantFooter.insert({before : newVariantHeader_0});
-     
-        var varHeader_1_TemplateEl = this.variantHeaderElement_1;
-        var varHeader_1_Inner = varHeader_1_TemplateEl.innerHTML.replace( /GENE_INDEX_PLACEHOLDER/g , geneIndex);
+        
+        var varHeader_1_Inner = this.variantHeaderTemplate_1.evaluate(data);
         var newVariantHeader_1 = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-title-row  variant-hide-heading-'+geneIndex});
         newVariantHeader_1.update(varHeader_1_Inner);
         variantFooter.insert({before : newVariantHeader_1});
@@ -665,31 +639,13 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
         varCount = $$('.variant-hide-heading-' + geneIndex + ' .variant-row-count').size()+1;
         var newHeader = $$('.variant.variant-title.gene-'+geneIndex)[0].firstChild.textContent.replace(/(\().+?(\))/g, "$1"+varCount+"$2");
         $$('.variant.variant-title.gene-'+geneIndex)[0].firstChild.textContent = newHeader;
+        data.VARIANT_COUNT_PLACEHOLDER = varCount;
       }
 
-      var newVariantRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-hide-heading-'+geneIndex});
-      var varRowTemplateEl = this.newVariantRowElement;
-      
+      data.VRCOUNT_PLACEHOLDER = geneCount+'.'+varCount;
+  
       var evaluateTemplate = function evaluateTemplate(placeholder) {
         switch(true) {
-          case /GENE_SYMBOL_PLACEHOLDER/.test(placeholder):
-            return geneSymbol;
-            break;
-          case /GENE_NUMBER_PLACEHOLDER/.test(placeholder):
-            return idx;
-            break;
-          case /VARIANT_COUNT_PLACEHOLDER/.test(placeholder):
-            return varCount;
-            break;
-          case /VARIANT_INDEX_PLACEHOLDER/.test(placeholder):
-            return varIndex;
-            break;
-          case /GENE_INDEX_PLACEHOLDER/.test(placeholder):
-            return geneIndex;
-            break;
-          case /VRCOUNT_PLACEHOLDER/.test(placeholder):
-            return geneCount+'.'+varCount;
-            break;
           case /_\d+_/.test(placeholder):
             return '_'+varIndex+'_';
             break;
@@ -707,17 +663,16 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
             break;
         }
       }
-      
-      var varRowInner = varRowTemplateEl.innerHTML.replace(/GENE_INDEX_PLACEHOLDER|GENE_SYMBOL_PLACEHOLDER|VRCOUNT_PLACEHOLDER|VARIANT_COUNT_PLACEHOLDER|VARIANT_INDEX_PLACEHOLDER|_\d+_|=\d+&amp;|\$\{object.xWikiClass.name\}|\$\{object.number\}/g, function (placeholder) {return evaluateTemplate(placeholder)});
 
+      var newVariantRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-hide-heading-'+geneIndex});
+      var varRowInner = this.variantRowTemplate.evaluate(data);
+      varRowInner = varRowInner.replace(/_\d+_|=\d+&amp;|\$\{object.xWikiClass.name\}|\$\{object.number\}/g, function (placeholder) {return evaluateTemplate(placeholder)});
       newVariantRow.insert(varRowInner);
       variantFooter.insert({before : newVariantRow});
 
       var newMoreInfoRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' v-collapsed variant-moreinfo-row variant-hide-heading-'+geneIndex});
-      var varMoreInfoTemplateEl = this.newMoreInfoElement;
-      
-      var varMoreInfoInner = varMoreInfoTemplateEl.innerHTML.replace(/GENE_INDEX_PLACEHOLDER|GENE_SYMBOL_PLACEHOLDER|VARIANT_COUNT_PLACEHOLDER|VARIANT_INDEX_PLACEHOLDER|_\d+_|=\d+&amp;|\$\{object.xWikiClass.name\}|\$\{object.number\}/g, function (placeholder) {return evaluateTemplate(placeholder)});
-
+      var varMoreInfoInner = this.moreInfoSectionTemplate.evaluate(data);
+      varMoreInfoInner = varMoreInfoInner.replace(/_\d+_|=\d+&amp;|\$\{object.xWikiClass.name\}|\$\{object.number\}/g, function (placeholder) {return evaluateTemplate(placeholder)});
       newMoreInfoRow.insert(varMoreInfoInner);
       variantFooter.insert({before : newMoreInfoRow});
          
@@ -725,10 +680,12 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
       
       this.createEditButtons('.variant-moreinfo-editbutton-row.variant-'+varIndex);
       this.createEditDoneButtons('.variant-moreinfo-editdonebutton-row.variant-'+varIndex);
+
       newMoreInfoRow.select('a.variant-edit').invoke('observe', 'click', this.editData.bindAsEventListener(this));
       newMoreInfoRow.select('a.variant-edit-done').invoke('observe', 'click', this.editDoneData.bindAsEventListener(this));
       //invoking click event to hide rows with empty inputs in 'more info' section
       newMoreInfoRow.select('a.variant-edit-done').invoke('click');
+
       this.createShowMoreinfoButtons('td.variant-row-count.variant-'+varIndex);
 
       newMoreInfoRow.select('.variant-moreinfo-editbutton-row tr').each( function(item) {
