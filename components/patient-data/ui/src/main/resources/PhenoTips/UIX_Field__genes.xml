@@ -147,12 +147,12 @@
   }
 
   var updateInfo = function(el, value, isSuggestSelected) {
-    var newValue = (!value || value == "") ? el.value : value;
+    value = value || el.value;
     if (el.next() &amp;&amp; el.next().className.startsWith('LV_validation_message'))
         el.next().remove();
  
     //Hide/show variant add button if empty/non-empty genesymbol
-    if (newValue != "" ) {
+    if (value != "" ) {
       if (el.__Gene_validator &amp;&amp; el.__Gene_validator.valid)
         el.up('tr').next().toggleClassName('v-collapsed', false);
       else
@@ -161,9 +161,9 @@
       el.up('tr').next().toggleClassName('v-collapsed', true);
     }
     //update genesymbol label for input field
-    el.previous().innerHTML = newValue;
+    el.previous().innerHTML = value;
     //update info icon
-    fetchGeneDetails([el],[newValue], isSuggestSelected);
+    fetchGeneDetails([el],[value], isSuggestSelected);
   }
 
   fetchGeneDetails($$('input.gene-name'), null, true);

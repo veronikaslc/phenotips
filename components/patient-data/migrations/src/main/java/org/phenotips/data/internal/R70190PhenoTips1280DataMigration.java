@@ -240,12 +240,12 @@ public class R70190PhenoTips1280DataMigration extends AbstractHibernateDataMigra
                 newgene.setStringValue(STATUS_NAME, "candidate");
             } else {
                 // we have a duplicate in either solved or rejected genes - updating its comment
-                String commentUpend =
+                String commentApend =
                     "\n-----\nAutomatic migration: gene was duplicated in the candidate gene section.";
                 if (!oldGeneComments.getValue().isEmpty()) {
-                    commentUpend += "\nOriginal comment:\n" + oldGeneComments.getValue();
+                    commentApend += "\nOriginal comment:\n" + oldGeneComments.getValue();
                 }
-                updateComment(oldGeneName, doc, commentUpend, geneClassReference, session, context);
+                updateComment(oldGeneName, doc, commentApend, geneClassReference, session, context);
             }
         }
         doc.setComment("Migrate 'candidate' genes to the GeneClass objects");

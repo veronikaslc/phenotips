@@ -27,7 +27,6 @@ import org.xwiki.model.reference.EntityReference;
 import org.xwiki.observation.AbstractEventListener;
 import org.xwiki.observation.event.Event;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +35,8 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
 
+import org.apache.commons.lang3.StringUtils;
+
 import com.xpn.xwiki.XWikiContext;
 import com.xpn.xwiki.XWikiException;
 import com.xpn.xwiki.doc.XWikiDocument;
@@ -43,7 +44,8 @@ import com.xpn.xwiki.objects.BaseObject;
 import com.xpn.xwiki.objects.BaseStringProperty;
 
 /**
- * Removes empty objects from the document.
+ * Removes gene and variant objects from the document if key fields are empty, gene field for genes and cdna field for
+ * variants.
  *
  * @version $Id$
  * @since 1.2RC1
@@ -74,22 +76,19 @@ public class PatientEmptyObjectsRemover extends AbstractEventListener
         super("empty-objects-remover", new PatientChangingEvent());
     }
 
-    private List<String> getKeys()
-    {
-        return Arrays.asList(GENE_KEY, VARIANT_KEY);
-    }
-
     @Override
     public void onEvent(Event event, Object source, Object data)
     {
         XWikiDocument doc = (XWikiDocument) source;
         XWikiContext context = (XWikiContext) this.execution.getContext().getProperty("xwikicontext");
 
+        Boolean changed = false;
+
         Map<String, EntityReference> refs = new LinkedHashMap<String, EntityReference>();
         refs.put(GENE_KEY, GENE_CLASS_REFERENCE);
         refs.put(VARIANT_KEY, VARIANT_CLASS_REFERENCE);
 
-        for (String key : getKeys()) {
+        for (String key : refs.keySet()) {
             List<BaseObject> xWikiObjects = doc.getXObjects(refs.get(key));
             if (xWikiObjects == null || xWikiObjects.isEmpty()) {
                 continue;
@@ -99,17 +98,19 @@ public class PatientEmptyObjectsRemover extends AbstractEventListener
                     continue;
                 }
                 BaseStringProperty field = (BaseStringProperty) object.getField(key);
-                if (field == null || "".equals(field.getValue())) {
+                if (field == null || StringUtils.isEmpty(field.getValue())) {
                     doc.removeXObject(object);
-                    try {
-                        context.getWiki().saveDocument(doc, "Removed empty object", true, context);
-                    } catch (XWikiException e) {
-                        // This should not happen;
-                    }
+                    changed = true;
                 }
-
             }
         }
 
+        try {
+            if (changed) {
+                context.getWiki().saveDocument(doc, "Removed empty object", true, context);
+            }
+        } catch (XWikiException e) {
+            // This should not happen;
+        }
     }
 }

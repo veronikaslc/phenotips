@@ -61,7 +61,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 #end
 ##
 #macro (__variant__deleteTool $object)
-{{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative; float: right;">&lt;a class="action delete-variant button secondary" style="margin-top : 0" href="$doc.getURL('objectremove', "classname=${object.xWikiClass.name}&amp;amp;classid=${object.number}&amp;amp;form_token=$!{services.csrf.getToken()}")"  title="$services.localization.render('phenotips.tableMacros.delete')">✖&lt;/a>&lt;/span>{{/html}}##
+{{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative; float: right;">&lt;a class="action delete-variant button secondary" style="margin-top : 0" href="$doc.getURL('objectremove', "classname=${object.xWikiClass.name}&amp;amp;classid=${object.number}&amp;amp;form_token=$!{services.csrf.getToken()}")" title="$services.localization.render('phenotips.tableMacros.delete')">✖&lt;/a>&lt;/span>{{/html}}##
 #end
 ##
 ##
@@ -72,29 +72,62 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 #set($count = 'VARIANT_COUNT_PLACEHOLDER')
 #set($geneObjNumber = 'GENE_INDEX_PLACEHOLDER')
 #set($geneName = 'GENE_SYMBOL_PLACEHOLDER')
-|(%class="pseudoindent"%) |=(% colspan="4" class="variant variant-title gene-$geneObjNumber" %) $services.localization.render("${classname}.variantTable.title", [$geneName, $count]) \\
-(%class="variant-gene-$geneObjNumber variant-title-row variant-hide-heading-$geneObjNumber"%)|(%class="pseudoindent"%) |=(% class="variant var-row-number" %)(%%)#foreach($propName in $options.defaultProperties) |=(% class="variant col-label" %) $services.localization.render("${classname}.variantTable.${propName}") #end |=(% class="transparent-row" %) 
+|(%class="pseudoindent"%) ##
+|=(% colspan="4" class="variant variant-title gene-$geneObjNumber" %) $services.localization.render("${classname}.variantTable.title", [$geneName, $count]) \\
+(%class="variant-gene-$geneObjNumber variant-title-row variant-hide-heading-$geneObjNumber"%)##
+|(%class="pseudoindent"%) ##
+|=(% class="variant var-row-number" %)(%%)##
+#foreach($propName in $options.defaultProperties) 
+|=(% class="variant col-label" %) $services.localization.render("${classname}.variantTable.${propName}") ##
+#end 
+|=(% class="transparent-row" %) 
 #end
 ##
 ##
 #macro(__variant_head $count $geneObjNumber $geneName $classname $options)##
-|(%class="pseudoindent"%) |=(% colspan="4" class="variant variant-title gene-$geneObjNumber" %) $services.localization.render("${classname}.variantTable.title", [$geneName, $count]) \\
-(%class="variant-gene-$geneObjNumber variant-title-row variant-hide-heading-$geneObjNumber"%)|(%class="pseudoindent"%) |=(% class="variant var-row-number"  %) #(%%)#foreach($propName in $options.defaultProperties) |=(% class="variant col-label" %) $services.localization.render("${classname}.variantTable.${propName}") #end |=(% class="transparent-row" %) 
+|(%class="pseudoindent"%) ##
+|=(% colspan="4" class="variant variant-title gene-$geneObjNumber" %) $services.localization.render("${classname}.variantTable.title", [$geneName, $count]) \\
+(%class="variant-gene-$geneObjNumber variant-title-row variant-hide-heading-$geneObjNumber"%)##
+|(%class="pseudoindent"%) ##
+|=(% class="variant var-row-number"  %) #(%%)##
+#foreach($propName in $options.defaultProperties) 
+|=(% class="variant col-label" %) $services.localization.render("${classname}.variantTable.${propName}") ##
+#end 
+|=(% class="transparent-row" %) 
 #end
 ##
 ##
 ##
-#macro (__variant_row_empty $variantClassName $geneObjNumber $options)
+#macro (__variant_row_empty $variantClassName $geneObjNumber $options)##
 #set($fakeObj = $doc.newObject($variantClassName))
 #set($variantIndex = 'VARIANT_INDEX_PLACEHOLDER')
 #set($geneObjNumber = 'GENE_INDEX_PLACEHOLDER')
 #set($count = 'VRCOUNT_PLACEHOLDER')
-|(% class="v-collapsed" %) $doc.display('genesymbol', $options.mode, $fakeObj)|(% class="pseudoindent" %) |(% class="variant-row-count variant-${variantIndex} variant" %)$count#foreach($propName in $options.defaultProperties)|(% class="variant variant-default-input $propName variant-$variantIndex" %) $doc.display($propName, $options.mode, $fakeObj) #end#__variant__deleteTool($variantObj)\\
-(% class="variant-gene-$geneObjNumber variant-moreinfo-row v-collapsed variant-hide-heading-$geneObjNumber" %)|(% class="pseudoindent" %)|(% class = "variant" %)|(% colspan="3" class="variant moreinfo" %)(% class="variant-moreinfo-editbutton-row variant-$variantIndex" %)((( #foreach ($prop in $fakeObj.xWikiClass.properties) #if ($prop.getName() != 'genesymbol' &amp;&amp; !$options.defaultProperties.contains($prop.getName()))
+|(% class="v-collapsed" %) $doc.display('genesymbol', $options.mode, $fakeObj)##
+|(% class="pseudoindent" %) ##
+|(% class="variant-row-count variant-${variantIndex} variant" %)$count##
+#foreach($propName in $options.defaultProperties)
+|(% class="variant variant-default-input $propName variant-$variantIndex" %) $doc.display($propName, $options.mode, $fakeObj) ##
+#end
+#__variant__deleteTool($variantObj)\\
+(% class="variant-gene-$geneObjNumber variant-moreinfo-row v-collapsed variant-hide-heading-$geneObjNumber" %)##
+|(% class="pseudoindent" %)##
+|(% class = "variant" %)##
+|(% colspan="3" class="variant moreinfo" %)(% class="variant-moreinfo-editbutton-row variant-$variantIndex" %)((( ##
+#foreach ($prop in $fakeObj.xWikiClass.properties) 
+#if ($prop.getName() != 'genesymbol' &amp;&amp; !$options.defaultProperties.contains($prop.getName()))
   
 #set ($isInputString = $options.inputStrings.contains($prop.getName())) 
 #set($rawValue = "")
-|(% class="variant-moreinfo variant-property-name-$variantIndex %)**${prop.translatedPrettyName}**| (% class="variant-property-value ${prop.getName()}-$variantIndex variant-label-$variantIndex" %) #if($isInputString) $rawValue #else $doc.display($prop.getName(), 'view', $fakeObj )#end (%%) (% class="v-collapsed variant-input-$variantIndex" %)$doc.display($prop.getName(), $options.mode, $fakeObj )#end##
+|(% class="variant-moreinfo variant-property-name-$variantIndex %)**${prop.translatedPrettyName}**##
+| (% class="variant-property-value ${prop.getName()}-$variantIndex variant-label-$variantIndex" %) ##
+#if($isInputString) 
+$rawValue ##
+#else 
+$doc.display($prop.getName(), 'view', $fakeObj )##
+#end ##
+(%%) (% class="v-collapsed variant-input-$variantIndex" %)$doc.display($prop.getName(), $options.mode, $fakeObj )##
+#end
 #end
 ))) (% class="variant-moreinfo-editdonebutton-row variant-$variantIndex" %)\\
 #end
@@ -102,11 +135,28 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 ##
 ##
 #macro (__variant_row $variantObj $count $variantIndex $geneObjNumber $options)
-#if ($options.mode == 'edit')|(% class="v-collapsed" %) $doc.display('genesymbol', $options.mode, $variantObj)#end|(% class="pseudoindent" %) |(% class="variant-row-count variant-${variantIndex} variant" %)$count#foreach($propName in $options.defaultProperties)|(% class="variant variant-default-input $propName variant-$variantIndex" %)$doc.display($propName, $options.mode, $variantObj)#end#if ($options.mode == 'edit')#__variant__deleteTool($variantObj)#end\\
-(% class="variant-gene-$geneObjNumber variant-moreinfo-row v-collapsed variant-hide-heading-$geneObjNumber" %)|(% class="pseudoindent" %)|(% class = "variant" %)|(% colspan="3" class="variant moreinfo" %)#if ($options.mode == 'edit')(% class="variant-moreinfo-editbutton-row variant-$variantIndex" %)#end((( #foreach ($prop in $variantObj.xWikiClass.properties)#set($rawValue = $variantObj.getProperty($prop.getName()).value)#set($isValueEmpty = $rawValue == '' || $rawValue == 'NA' || $rawValue == [])#if ($prop.getName() != 'genesymbol' &amp;&amp; !$options.defaultProperties.contains($prop.getName()))#if ($options.mode == 'edit' || ($options.mode != 'edit' &amp;&amp; !$isValueEmpty))
+#if ($options.mode == 'edit')
+|(% class="v-collapsed" %) $doc.display('genesymbol', $options.mode, $variantObj)##
+#end
+|(% class="pseudoindent" %) |(% class="variant-row-count variant-${variantIndex} variant" %)$count##
+#foreach($propName in $options.defaultProperties)
+|(% class="variant variant-default-input $propName variant-$variantIndex" %)$doc.display($propName, $options.mode, $variantObj)##
+#end
+#if ($options.mode == 'edit')#__variant__deleteTool($variantObj)#end\\
+(% class="variant-gene-$geneObjNumber variant-moreinfo-row v-collapsed variant-hide-heading-$geneObjNumber" %)##
+|(% class="pseudoindent" %)|(% class = "variant" %)|(% colspan="3" class="variant moreinfo" %)##
+#if ($options.mode == 'edit')(% class="variant-moreinfo-editbutton-row variant-$variantIndex" %)#end((( ##
+#foreach ($prop in $variantObj.xWikiClass.properties)
+#set($rawValue = $variantObj.getProperty($prop.getName()).value)
+#set($isValueEmpty = $rawValue == '' || $rawValue == 'NA' || $rawValue == [])
+#if ($prop.getName() != 'genesymbol' &amp;&amp; !$options.defaultProperties.contains($prop.getName()))
+#if ($options.mode == 'edit' || ($options.mode != 'edit' &amp;&amp; !$isValueEmpty))
 (% class="variant-moreinfo-table" %)
 #set ($isInputString = $options.inputStrings.contains($prop.getName()))
-|(% class="variant-moreinfo variant-property-name-$variantIndex %)**${prop.translatedPrettyName}**| (% class="variant-property-value ${prop.getName()}-$variantIndex #if ($options.mode == 'edit') variant-label-$variantIndex #end"%) #if($isInputString)$rawValue#else $doc.display($prop.getName(), 'view', $variantObj )#end (%%)#if ($options.mode == 'edit')(% class="v-collapsed variant-input-$variantIndex" %)$doc.display($prop.getName(), $options.mode, $variantObj )#end#end##
+|(% class="variant-moreinfo variant-property-name-$variantIndex %)**${prop.translatedPrettyName}**##
+| (% class="variant-property-value ${prop.getName()}-$variantIndex ##
+#if ($options.mode == 'edit') variant-label-$variantIndex #end"%) #if($isInputString)$rawValue#else $doc.display($prop.getName(), 'view', $variantObj )#end
+ (%%)#if ($options.mode == 'edit')(% class="v-collapsed variant-input-$variantIndex" %)$doc.display($prop.getName(), $options.mode, $variantObj )#end#end##
 #end#end
 ))) #if ($options.mode == 'edit')(% class="variant-moreinfo-editdonebutton-row variant-$variantIndex" %)#end\\
 #end
@@ -122,51 +172,73 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 (%class="variant-gene-$geneObjNumber variant-hide-heading-$geneObjNumber"%)#__variant_row($o "${geneNumber}.${variantCount}" $variantIndex $geneObjNumber $options)
 #end
 #end
-#if ($options.mode == 'edit')(%class="variant-gene-$geneObjNumber variant-footer #if ($genesymbol == "") v-collapsed#end"%)#__variant_foot($options $geneObjNumber $genesymbol $variantClassName)#end
+#if ($options.mode == 'edit')
+(%class="variant-gene-$geneObjNumber variant-footer ##
+#if ($genesymbol == "") v-collapsed#end"%)#__variant_foot($options $geneObjNumber $genesymbol $variantClassName)#end
 #end
 ##
 ##
 #macro(__variant_foot $options $geneObjNumber $genesymbol $variantClassName)##
-#if ($options.mode == 'edit')|(%class="pseudoindent"%) |(% colspan="4" class="variant variant-footer-$geneObjNumber" style="background : inherit;" %) #__variant_addTool($variantClassName $genesymbol)#end\\
+#if ($options.mode == 'edit')
+|(%class="pseudoindent"%) ##
+|(% colspan="4" class="variant variant-footer-$geneObjNumber" style="background : inherit;" %) #__variant_addTool($variantClassName $genesymbol)##
+#end\\
 #end
 ##
 ## -----------Gene table macros-------------------
 ##
-#macro (__gene_row $geneObj $geneNumber $variantClass $options)
+#macro (__gene_row $geneObj $geneNumber $variantClass $options)##
 #set($geneObjNumber = $geneObj.number)
 #set($variantObjects = $doc.getObjects($variantClass.name, "genesymbol", $geneObj.getProperty('gene').value))
-|(% class="row-count" %)$geneNumber #foreach($prop in $geneObj.xWikiClass.properties) |(% class="$prop.translatedPrettyName gene gene-$geneObjNumber" #if ($foreach.index == 0 || $foreach.index == 3) colspan="2" #end %) $doc.display($prop.name, $options.mode, $geneObj) #end #if ($options.mode == 'edit')|(% class="gene delete-gene-button-$geneObjNumber" %)#__gene__deleteWithVariants__tool($geneObj $variantClass.name)#end
+|(% class="row-count" %)$geneNumber ##
+#foreach($prop in $geneObj.xWikiClass.properties) ##
+|(% class="$prop.translatedPrettyName gene gene-$geneObjNumber" ##
+#if ($foreach.index == 0 || $foreach.index == 3) colspan="2" #end %) $doc.display($prop.name, $options.mode, $geneObj) ##
+#end 
+#if ($options.mode == 'edit')
+|(% class="gene delete-gene-button-$geneObjNumber" %)#__gene__deleteWithVariants__tool($geneObj $variantClass.name)##
+#end
 
 #__variant_table($variantObjects $geneNumber $geneObjNumber $options $geneObj.getProperty('gene').value $variantClass.name)
 #end
 ##
 ##
 ##
-#macro (__gene_row_empty $geneClassName $variantClassName $options) 
+#macro (__gene_row_empty $geneClassName $variantClassName $options)##
 #set($fakeObj = $doc.newObject($geneClassName))
 #set($geneNumber = 'GENE_NUMBER_PLACEHOLDER')
 #set($geneObjNumber = 'GENE_INDEX_PLACEHOLDER')
 #set($genesymbol = 'GENE_SYMBOL_PLACEHOLDER')
-|(% class="row-count" %)$geneNumber #foreach($prop in $xwiki.getDocument($geneClassName).xWikiClass.properties) |(% class="$prop.translatedPrettyName gene gene-$geneObjNumber" #if ($foreach.index == 0 || $foreach.index == 3) colspan="2" #end %) $doc.display($prop.name, $options.mode, $fakeObj) #end |(% class="gene delete-gene-button-$geneObjNumber" %)#__gene__deleteWithVariants__tool($fakeObj $variantClassName)  
+|(% class="row-count" %)$geneNumber ##
+#foreach($prop in $xwiki.getDocument($geneClassName).xWikiClass.properties)
+ |(% class="$prop.translatedPrettyName gene gene-$geneObjNumber" ##
+#if ($foreach.index == 0 || $foreach.index == 3) colspan="2" #end %) $doc.display($prop.name, $options.mode, $fakeObj) ##
+#end
+ |(% class="gene delete-gene-button-$geneObjNumber" %)#__gene__deleteWithVariants__tool($fakeObj $variantClassName)  
 
 (%class="variant-gene-$geneObjNumber variant-footer"%)#__variant_foot($options $geneObjNumber $genesymbol $variantClassName)
 #end
 ##
 ##
-#macro (__gene_table $geneClassName $variantClassName $options)
+#macro (__gene_table $geneClassName $variantClassName $options)##
 #set($geneClass = $xwiki.getDocument($geneClassName).xWikiClass)
 #set($variantClass = $xwiki.getDocument($variantClassName).xWikiClass)
 (% id="extradata-list-$geneClassName" class="gene-table extradata-list withCounter" %)
-|= #foreach($prop in $geneClass.properties) |=(% class="gene-t-header-$prop.getName() col-label " #if ($foreach.index == 0 || $foreach.index == 3) colspan="2" #end %) $prop.translatedPrettyName#end
+|= #foreach($prop in $geneClass.properties) ##
+|=(% class="gene-t-header-$prop.getName() col-label " ##
+#if ($foreach.index == 0 || $foreach.index == 3) colspan="2" #end %) $prop.translatedPrettyName#end
 #set($geneObjects = $doc.getObjects($geneClass.name))#if ($options.mode == 'edit')|=#end
 
 #foreach ($o in $geneObjects)
 #set ($geneNumber = $foreach.count)
 #__gene_row($o $geneNumber $variantClass $options)
 #end
-#if ($options.mode == 'edit')#__gene_row_empty($geneClassName $variantClassName $options)#end
-#if ($options.mode == 'edit')(%class="variant-gene-GENE_INDEX_PLACEHOLDER variant-title-row"%)#__variant_head_empty($variantClassName $options)#end
-#if ($options.mode == 'edit')(%class="variant-gene-GENE_INDEX_PLACEHOLDER variant-hide-heading-GENE_INDEX_PLACEHOLDER"%)#__variant_row_empty($variantClassName $options)#end
+#if ($options.mode == 'edit')
+#set($geneIndexPlaceholder = 'GENE_INDEX_PLACEHOLDER')
+#__gene_row_empty($geneClassName $variantClassName $options)
+(%class="variant-gene-$geneIndexPlaceholder variant-title-row"%)#__variant_head_empty($variantClassName $options)
+(%class="variant-gene-$geneIndexPlaceholder variant-hide-heading-$geneIndexPlaceholder"%)#__variant_row_empty($variantClassName $options)##
+#end
 
 
 #if ($options.mode == 'edit')(% class="list-actions" %)(((#__gene_addTool($geneClassName))))#end\\
@@ -275,12 +347,15 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
       <code>var ExtraGeneVariantData = (function (ExtraGeneVariantData) {
   var tools = ExtraGeneVariantData.tools = ExtraGeneVariantData.tools || {};
   tools.Editor = Class.create({
+  
     initialize : function () {
       this.geneClassName = $$('.gene-table.extradata-list')[0].id.substring($$('.gene-table.extradata-list')[0].id.lastIndexOf('-')+1);
       this.geneVariantClassName = 'PhenoTips.GeneVariantClass';
+      
       //if edit mode
       if (!!$('inline')) {
-        this.warnSaving = false;
+
+        this.areaEditDataListenerArray = [];
         this.getNewRowsTemplates();
         this.createEditButtons('.variant-moreinfo-editbutton-row');
         this.createEditDoneButtons('.variant-moreinfo-editdonebutton-row');
@@ -294,8 +369,8 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         //invoking click event to hide rows with empty inputs in 'more info' section
         $$('.gene-table a.variant-edit-done').invoke('click');
         this.lockGeneInput();
-
       }
+      
       $$('.gene-table tr tr').each( function(item) {
         item.toggleClassName('moreinfo-view', true);
       });
@@ -303,6 +378,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
       this.createHideShowButtons('.variant.variant-title');
       $$('.gene-table tr th')[0].width = '1em';
     },
+    
     areaEditData  : function (event) {
       var el = null;
       if (event.element().className == 'variant moreinfo')
@@ -313,14 +389,17 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
       var className = el.down('.variant-moreinfo-editbutton-row').className;
       var varIndex = className.substring(className.lastIndexOf('-')+1);
       event.stopPropagation();
-      document.observe('click', function (event) {
-        if (!event.element().up('.variant-moreinfo-editbutton-row.variant-'+varIndex)){
-          $$('.variant-'+varIndex+' a.variant-edit-done').invoke('click');
-        }
-      });
+      if ( this.areaEditDataListenerArray.indexOf(varIndex) &lt; 0 ) {
+        this.areaEditDataListenerArray.push(varIndex);
+        document.observe('click', function (event) {
+          if (!event.element().up('.variant-moreinfo-editbutton-row.variant-'+varIndex)){
+            $$('.variant-'+varIndex+' a.variant-edit-done').invoke('click');
+          }
+        });
+      }
     },
+    
     getNewRowsTemplates  : function () {
-      
       var sizep = $$('.variant-gene-GENE_INDEX_PLACEHOLDER').size();
       this.newGeneRowElement = $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[0].previous();
       this.addVariantButtonElement = $$('.variant-gene-GENE_INDEX_PLACEHOLDER')[sizep-5];
@@ -333,16 +412,21 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         item.remove();
       });
     },
+    
     ajaxDeleteGeneData : function (event) {
       event.stop();
+      
       var deleteTrigger = event.element();
       var className = deleteTrigger.up('td').className;
-      var geneIndex = parseInt(className.substring(className.lastIndexOf('-')+1));
+      var geneIndex = parseInt(className.substring(className.lastIndexOf('-')+1), 10);
       var geneSymbol = $$('[name="'+this.geneClassName+'_' + geneIndex + '_gene"]')[0].value;
+      
       new XWiki.widgets.ConfirmedAjaxRequest(deleteTrigger.href+geneSymbol, {
+      
         onCreate : function() {
           deleteTrigger.disabled = true
         },
+        
         onSuccess : function() {
           var dataRow = deleteTrigger.up('tr:not(.head-group)');
           var dataTable = deleteTrigger.up('table.gene-table.extradata-list');
@@ -358,20 +442,23 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
               var geneRowIndex = item.next().className.substring(item.next().className.lastIndexOf('-')+1);
               var y = 1;
               $$('.variant-hide-heading-' + geneRowIndex + ' .variant-row-count').each(function(vitem) {
-                vitem.update(i + '.' + (y++));
+                vitem.childNodes[1].textContent = i + '.' + (y++);
               });
               item.update(i++);
             });
           }
         },
+        
         onComplete : function() {
           deleteTrigger.disabled = false;
         }
+        
       },
       {
          confirmationText : "$!services.localization.render('phenotips.tableMacros.rowDeleteConfirmation')"
       });
     },
+    
     ajaxAddGeneData : function (event) {
       event.stop();
       var addTrigger = event.element();
@@ -389,17 +476,48 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 
       var idx = dataTable.select('td.row-count').size() + 1;
       var geneIndex = 0;
-      if (dataTable.select('td.row-count').size() > 0) {
+      if (dataTable.select('td.row-count').size() &gt; 0) {
         var className = dataTable.select('td.row-count')[idx - 2].next().className;
-        geneIndex = parseInt(className.substring(className.lastIndexOf('-')+1)) + 1;
+        geneIndex = parseInt(className.substring(className.lastIndexOf('-')+1), 10) + 1;
       }
 
       var newGeneRow = new Element('tr');
-      var newButtonRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-footer v-collapsed'}); 
-
-      var geneRowInner = geneRowTemplateEl.innerHTML.replace( /GENE_NUMBER_PLACEHOLDER/g, idx).replace( /GENE_INDEX_PLACEHOLDER/g, geneIndex).replace(/_\d+_/g, '_'+geneIndex+'_').replace(/=\d+&amp;/g, '='+geneIndex+'&amp;');
-      var buttonRowInner = buttonRowTemplateEl.innerHTML.replace( /GENE_NUMBER_PLACEHOLDER/g, idx).replace( /GENE_INDEX_PLACEHOLDER/g, geneIndex);
-
+      var newButtonRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-footer v-collapsed'});
+  
+      var geneRowInner = geneRowTemplateEl.innerHTML.replace(/GENE_NUMBER_PLACEHOLDER|GENE_INDEX_PLACEHOLDER|_\d+_|=\d+&amp;/g, function (placeholder) {
+        switch(true) {
+          case /GENE_NUMBER_PLACEHOLDER/.test(placeholder):
+            return idx;
+            break;
+          case /GENE_INDEX_PLACEHOLDER/.test(placeholder):
+            return geneIndex;
+            break;
+          case /_\d+_/.test(placeholder):
+            return '_'+geneIndex+'_';
+            break;
+          case /=\d+&amp;/.test(placeholder):
+            return '_'+geneIndex+'_';
+            break;
+          default:
+            return "";
+            break;
+        }
+      });
+      
+      var buttonRowInner = buttonRowTemplateEl.innerHTML.replace( /GENE_NUMBER_PLACEHOLDER|GENE_INDEX_PLACEHOLDER/g, function (placeholder) {
+        switch(true) {
+          case /GENE_NUMBER_PLACEHOLDER/.test(placeholder):
+            return idx;
+            break;
+          case /GENE_INDEX_PLACEHOLDER/.test(placeholder):
+            return geneIndex;
+            break;
+          default:
+            return "";
+            break;
+        }
+      });
+      
       newGeneRow.insert(geneRowInner);
       dataTable.down('tbody').insert(newGeneRow);
       newButtonRow.insert(buttonRowInner);
@@ -416,6 +534,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 
       Event.fire(document, 'xwiki:dom:updated', {'elements' : [newGeneRow]});
     },
+    
     ajaxDeleteVariantData : function (event) {
       event.stop();
       var deleteTrigger = event.element();
@@ -424,14 +543,16 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
          return;
       }
       new XWiki.widgets.ConfirmedAjaxRequest(deleteTrigger.href, {
+      
         onCreate : function() {
           deleteTrigger.disabled = true
         },
+        
         onSuccess : function() {
           var dataRow = deleteTrigger.up('tr:not(.head-group)');
           if (dataRow) {
             var className = dataRow.previous().className;
-            var geneIndex = parseInt(className.substring(className.lastIndexOf('-')+1));
+            var geneIndex = parseInt(className.substring(className.lastIndexOf('-')+1), 10);
             //we are deleting the only variant in the gene: remove variant table header, 
             //  unlock the genesymbol input field
             if (dataRow.previous().hasClassName('variant-title-row') &amp;&amp; dataRow.next(1).hasClassName('variant-footer')) {
@@ -458,16 +579,20 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
             }    
           }
         },
+        
         onComplete : function() {
           deleteTrigger.disabled = false;
         }
+        
       },
       {
          confirmationText : "$!services.localization.render('phenotips.tableMacros.rowDeleteConfirmation')"
       });
     },
+    
     ajaxAddVariantData : function (event) {
       event.stop();
+      
       var addTrigger = event.element();
       if (addTrigger.disabled) 
          return;
@@ -475,7 +600,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
       try {
         var classname = /classname=([^&amp;]+)/.exec(addTrigger.href)[1];
       } catch (err) {
-         new XWiki.widgets.Notification('Cannot add data: type not found', 'error');
+         new XWiki.widgets.Notification("$services.localization.render('phenotips.tableMacros.typeNotFound')", 'error');
          return;
       }
       
@@ -493,18 +618,37 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
       }
       
       var varCount = 1;
-      var geneCount = parseInt($$('td.gene.gene-'+geneIndex)[0].up('tr').down('td').innerHTML);
+      var geneCount = parseInt($$('td.gene.gene-'+geneIndex)[0].up('tr').down('td').innerHTML, 10);
       var varIndex = 0;
       $$('.variant-moreinfo-editbutton-row').each( function(item) {
-        var indx = parseInt(item.className.substring(item.className.lastIndexOf('-')+1));
-        varIndex = (indx > varIndex) ? indx : varIndex;
+        var indx = parseInt(item.className.substring(item.className.lastIndexOf('-')+1), 10);
+        varIndex = Math.max(indx, varIndex);
       });
       varIndex++;
+
+      var evaluateTemplate = function evaluateTemplate(placeholder) {
+        switch(true) {
+          case /GENE_SYMBOL_PLACEHOLDER/.test(placeholder):
+            return geneSymbol;
+            break;
+          case /VARIANT_COUNT_PLACEHOLDER/.test(placeholder):
+            return varCount;
+            break;
+          case /GENE_INDEX_PLACEHOLDER/.test(placeholder):
+            return geneIndex;
+            break;
+          default:
+            return "";
+            break;
+        }
+      }
       
       //If we insert first row of variants - create headers
       if (variantFooter.previous().className == '') {
         var varHeader_0_TemplateEl = this.variantHeaderElement_0;
-        var varHeader_0_Inner = varHeader_0_TemplateEl.innerHTML.replace( /GENE_SYMBOL_PLACEHOLDER/g , geneSymbol).replace( /GENE_INDEX_PLACEHOLDER/g, geneIndex).replace( /VARIANT_COUNT_PLACEHOLDER/g, varCount);
+        
+        var varHeader_0_Inner = varHeader_0_TemplateEl.innerHTML.replace(/GENE_SYMBOL_PLACEHOLDER|VARIANT_COUNT_PLACEHOLDER|GENE_INDEX_PLACEHOLDER/g, function (placeholder){return evaluateTemplate(placeholder)});
+    
         var newVariantHeader_0 = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-title-row'});
         newVariantHeader_0.update(varHeader_0_Inner);
         variantFooter.insert({before : newVariantHeader_0});
@@ -525,14 +669,54 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 
       var newVariantRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-hide-heading-'+geneIndex});
       var varRowTemplateEl = this.newVariantRowElement;
-      var varRowInner = varRowTemplateEl.innerHTML.replace(/GENE_INDEX_PLACEHOLDER/g, geneIndex).replace( /GENE_SYMBOL_PLACEHOLDER/g, geneSymbol).replace(/VRCOUNT_PLACEHOLDER/g , geneCount+'.'+varCount).replace(/VARIANT_COUNT_PLACEHOLDER/g, varCount).replace(/VARIANT_INDEX_PLACEHOLDER/g, varIndex).replace(/_\d+_/g, '_'+varIndex+'_').replace(/=\d+&amp;/g, '='+varIndex+'&amp;').replace( /\$\{object.xWikiClass.name\}/g, this.geneVariantClassName).replace( /\$\{object.number\}/g, varIndex);
+      
+      var evaluateTemplate = function evaluateTemplate(placeholder) {
+        switch(true) {
+          case /GENE_SYMBOL_PLACEHOLDER/.test(placeholder):
+            return geneSymbol;
+            break;
+          case /GENE_NUMBER_PLACEHOLDER/.test(placeholder):
+            return idx;
+            break;
+          case /VARIANT_COUNT_PLACEHOLDER/.test(placeholder):
+            return varCount;
+            break;
+          case /VARIANT_INDEX_PLACEHOLDER/.test(placeholder):
+            return varIndex;
+            break;
+          case /GENE_INDEX_PLACEHOLDER/.test(placeholder):
+            return geneIndex;
+            break;
+          case /VRCOUNT_PLACEHOLDER/.test(placeholder):
+            return geneCount+'.'+varCount;
+            break;
+          case /_\d+_/.test(placeholder):
+            return '_'+varIndex+'_';
+            break;
+          case /=\d+&amp;/.test(placeholder):
+            return '='+varIndex+'&amp;';
+            break;
+          case /\$\{object.xWikiClass.name\}/.test(placeholder):
+            return this.geneVariantClassName;
+            break;
+          case /\$\{object.number\}/.test(placeholder):
+            return varIndex;
+            break;
+          default:
+            return "";
+            break;
+        }
+      }
+      
+      var varRowInner = varRowTemplateEl.innerHTML.replace(/GENE_INDEX_PLACEHOLDER|GENE_SYMBOL_PLACEHOLDER|VRCOUNT_PLACEHOLDER|VARIANT_COUNT_PLACEHOLDER|VARIANT_INDEX_PLACEHOLDER|_\d+_|=\d+&amp;|\$\{object.xWikiClass.name\}|\$\{object.number\}/g, function (placeholder) {return evaluateTemplate(placeholder)});
 
       newVariantRow.insert(varRowInner);
       variantFooter.insert({before : newVariantRow});
 
       var newMoreInfoRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' v-collapsed variant-moreinfo-row variant-hide-heading-'+geneIndex});
       var varMoreInfoTemplateEl = this.newMoreInfoElement;
-      var varMoreInfoInner = varMoreInfoTemplateEl.innerHTML.replace(/GENE_INDEX_PLACEHOLDER/g, geneIndex).replace( /GENE_SYMBOL_PLACEHOLDER/g, geneSymbol).replace(/VARIANT_COUNT_PLACEHOLDER/g, varCount).replace(/VARIANT_INDEX_PLACEHOLDER/g, varIndex).replace(/_\d+_/g, '_'+varIndex+'_').replace(/=\d+&amp;/g, '='+varIndex+'&amp;').replace( /\$\{object.xWikiClass.name\}/g, this.geneVariantClassName).replace( /\$\{object.number\}/g, varIndex);
+      
+      var varMoreInfoInner = varMoreInfoTemplateEl.innerHTML.replace(/GENE_INDEX_PLACEHOLDER|GENE_SYMBOL_PLACEHOLDER|VARIANT_COUNT_PLACEHOLDER|VARIANT_INDEX_PLACEHOLDER|_\d+_|=\d+&amp;|\$\{object.xWikiClass.name\}|\$\{object.number\}/g, function (placeholder) {return evaluateTemplate(placeholder)});
 
       newMoreInfoRow.insert(varMoreInfoInner);
       variantFooter.insert({before : newMoreInfoRow});
@@ -556,6 +740,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
           
       Event.fire(document, 'xwiki:dom:updated', {'elements' : [newVariantRow]});
     },
+    
     createHideShowButtons : function (className) {
       //creating hide/Show variant section buttons
       $$(className).each( function(item){
@@ -587,6 +772,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         });
       });
     },
+    
     createEditDoneButtons : function (className) {
       $$(className).each(function(row) {
         var variantIndex = row.className.substring(row.className.lastIndexOf('-')+1);
@@ -595,6 +781,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         row.insert(editVarientWrapper);
       });
     },
+    
     createEditButtons : function (className) {
       $$(className).each(function(row) {
         var variantIndex = row.className.substring(row.className.lastIndexOf('-')+1);
@@ -603,6 +790,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         row.insert({top : editVarientWrapper});
       });
     },
+    
     createShowMoreinfoButtons : function (className) {
       $$(className).each(function(td) {
         var variantIndex = td.className.substring(td.className.lastIndexOf('-')+1);
@@ -613,8 +801,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
           if (event.element().up('tr').next().hasClassName('v-collapsed')) {
             event.element().toggleClassName('triRight', true);
             event.element().toggleClassName('triDown', false);
-          }
-          else{
+          } else{
             event.element().toggleClassName('triRight', false);
             event.element().toggleClassName('triDown', true);
           }
@@ -622,6 +809,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         td.insert({top : showMoreinfoWrapper});
       });
     },
+    
     lockGeneInput : function () {
       //lock genesymbol inputs if there are variants
       $$('.suggested.suggest-gene.gene-name').each( function(item) {
@@ -638,15 +826,20 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         }
       });
     },
+    
     editData : function (event) {
       event.stop();
+      
       var id = event.element().id;
       var variantIndex = id.substring(id.indexOf('_')+1, id.lastIndexOf('_'));
+      
       $$('.gene-table tr .variant-'+variantIndex+' tr').each( function(item) {
         item.toggleClassName('moreinfo-view', false);
       }); 
+      
       event.element().toggleClassName('v-collapsed', true); 
       $(this.geneVariantClassName+'_'+variantIndex+'_editDone').toggleClassName('v-collapsed', false);
+      
       var labels = $$('.variant-label-'+variantIndex);
       $$('.variant-input-'+variantIndex).each ( function(item, index) {
         item.toggleClassName('v-collapsed', false);
@@ -658,18 +851,25 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         item.toggleClassName('moreinfo-table-label-width', true);
       });
     },
+    
     editDoneData : function (event) {
       event.stop();
+      
       var id = event.element().id;
       var variantIndex = id.substring(id.indexOf('_')+1, id.lastIndexOf('_'));
+     
       $$('.gene-table tr .variant-'+variantIndex+' tr').each( function(item) {
         item.toggleClassName('moreinfo-view', true);
       }); 
+      
       event.element().toggleClassName('v-collapsed', true); 
       $(this.geneVariantClassName+'_'+variantIndex+'_edit').toggleClassName('v-collapsed', false);
+      
       var inputs = $$('.variant-input-'+variantIndex);
       var labels = $$('.variant-label-'+variantIndex);
+     
       for (var i=0;i&lt;inputs.length;i++) {
+      
         inputs[i].toggleClassName('v-collapsed', true);
         if (labels[i].className.indexOf('segregation') > -1 || labels[i].className.indexOf('sanger') > -1 || labels[i].className.indexOf('inheritance') > -1 || labels[i].className.indexOf('zygosity') > -1 || labels[i].className.indexOf('effect') > -1) {
           labels[i].innerHTML = inputs[i].firstChild[inputs[i].firstChild.selectedIndex].text;
@@ -682,6 +882,7 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         } else {
           labels[i].innerHTML = inputs[i].firstChild.value;
         }
+        
         //hide row in "More Info" if empty value
         if (labels[i].innerHTML == '') {
           labels[i].up('tr').toggleClassName('v-collapsed', true);
@@ -695,7 +896,9 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
         item.toggleClassName('moreinfo-table-label-width', false);
       });
     }
+    
   });
+  
   return ExtraGeneVariantData;
 }(ExtraGeneVariantData || {}));
 
@@ -703,55 +906,7 @@ document.observe('xwiki:dom:loaded', function() {
   new ExtraGeneVariantData.tools.Editor();
 })
 
-/*---TODO-- warning user for unfilled cDNA and gene name fields---
-  document.observe('xwiki:actions:save', function(event) {
-  if (!event.memo.confirmed &amp;&amp; event.memo &amp;&amp; event.memo.originalEvent) {
-  event.stop();
-  event.memo.originalEvent.stop();
-
-  var warn = false;
-
-  for (var i=0;i&lt;event.memo['form'].length;i++) {
-    item = event.memo['form'][i];
-    if (item.name &amp;&amp; /PhenoTips.GeneClass_\d+_gene/.test(item.name) &amp;&amp; item.value == "") {
-      var geneIdx = 'PhenoTips.GeneClass_'+ item.name.match(/\d+/g);
-      warn = warn || $$('select[name="'+geneIdx+'_status"]')[0].value != 'NA' || $$('select[name="'+geneIdx+'_evidence"]')[0].value != 'NA' || $$('textarea[name='+geneIdx+'_comments"]')[0].value != "";
-      if (warn) {
-        //highlight the gene field
-        item.toggleClassName('LV_invalid_field', true);
-      }
-    }
-    
-    if (item.name &amp;&amp;  /PhenoTips.GeneVariantClass_\d+_cdna/.test(item.name) &amp;&amp; item.value == "") {
-      varId = item.name.match(/\d+/g);
-      varIdx = 'PhenoTips.GeneVariantClass_'+varId;
-      warn = warn || $$('input[name="'+varIdx+'_protein"]')[0].value != "" || $$('input[name="'+varIdx+'_transcript"]')[0].value != "" || $$('input[name="'+varIdx+'_dbsnp"]')[0].value != "";
-      warn = warn || $$('select[name="'+varIdx+'_interpretation"]')[0].value != 'NA' || $$('select[name="'+varIdx+'_resolution"]')[0].value != 'NA' || $$('select[name="'+varIdx+'_zygosity"]')[0].value != 'NA';
-      warn = warn || $$('select[name="'+varIdx+'_effect"]')[0].value != 'NA' || $$('select[name="'+varIdx+'_inheritance"]')[0].value != 'NA' || $$('select[name="'+varIdx+'_segregation"]')[0].value != 'NA' || $$('select[name="'+varIdx+'_sanger"]')[0].value != 'NA';
-      warn = warn || $('xwiki-form-evidence-'+varId+'-0').checked || $('xwiki-form-evidence-'+varId+'-1').checked || $('xwiki-form-evidence-'+varId+'-2').checked || $('xwiki-form-evidence-'+varId+'-3').checked;
-      if (warn) {
-        //highlight the variant field
-        item.toggleClassName('LV_invalid_field', true);
-      }
-    } 
-  };
-
-  if (!warn)
-    return;
-
-  new XWiki.widgets.ConfirmationBox(
-    {
-      onYes : function() {
-        document.fire('xwiki:actions:save', {'continue' : event.memo['continue'], 'form' : event.memo['form'], 'confirmed' : true});
-      },
-      onNo : function() {
-      }
-    },
-    
-    { confirmationText: "$services.localization.render('PhenoTips.GeneVariantClass.saveWarning')", showCancelButton: false }
-  );
-  }
-})*/</code>
+</code>
     </property>
     <property>
       <name></name>
@@ -1060,7 +1215,7 @@ document.observe('xwiki:dom:loaded', function() {
     },
     validate : function(value) {
       if (this.state == 'DONE') {
-        this.value == value &amp;&amp; (this.valid || Validate.fail("This variant has already been entered."));
+        this.value == value &amp;&amp; (this.valid || Validate.fail("$services.localization.render('phenotips.tableMacros.variantAlreadyExist')"));
       }
       this.check();
       return true;
