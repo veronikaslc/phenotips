@@ -2399,7 +2399,7 @@ return PhenoTips;
         onSuccess: function (response) {
           this.setContent(this.buildTree(this._getDataFromResponse(response)));
           this.__crtRoot = id;
-          if (this.container.contentContainer != null)
+          if (this.container.content)
             Event.fire(document, 'xwiki:dom:updated', {'elements' : [this.container.contentContainer]});
         }.bind(this),
         onFailure: function (response) {
