@@ -73,7 +73,7 @@ public class GeneListController extends AbstractComplexController<Map<String, St
 
     private static final String GENES_STATUS_ENABLING_FIELD_NAME = "genes_status";
 
-    private static final String GENES_EVIDENCE_ENABLING_FIELD_NAME = "genes_evidence";
+    private static final String GENES_STRATEGY_ENABLING_FIELD_NAME = "genes_strategy";
 
     private static final String GENES_COMMENTS_ENABLING_FIELD_NAME = "genes_comments";
 
@@ -81,7 +81,7 @@ public class GeneListController extends AbstractComplexController<Map<String, St
 
     private static final String STATUS_KEY = "status";
 
-    private static final String EVIDENCE_KEY = "evidence";
+    private static final String STRATEGY_KEY = "strategy";
 
     private static final String COMMENTS_KEY = "comments";
 
@@ -103,7 +103,7 @@ public class GeneListController extends AbstractComplexController<Map<String, St
     @Override
     protected List<String> getProperties()
     {
-        return Arrays.asList(GENE_KEY, STATUS_KEY, EVIDENCE_KEY, COMMENTS_KEY);
+        return Arrays.asList(GENE_KEY, STATUS_KEY, STRATEGY_KEY, COMMENTS_KEY);
     }
 
     @Override
@@ -184,10 +184,10 @@ public class GeneListController extends AbstractComplexController<Map<String, St
         JSONArray container = json.getJSONArray(getJsonPropertyName());
 
         List<String> keys =
-            Arrays.asList(GENE_KEY, EVIDENCE_KEY, COMMENTS_KEY);
+            Arrays.asList(GENE_KEY, STRATEGY_KEY, COMMENTS_KEY);
 
         List<String> enablingProperties =
-            Arrays.asList(GENES_STATUS_ENABLING_FIELD_NAME, GENES_EVIDENCE_ENABLING_FIELD_NAME,
+            Arrays.asList(GENES_STATUS_ENABLING_FIELD_NAME, GENES_STRATEGY_ENABLING_FIELD_NAME,
                 GENES_COMMENTS_ENABLING_FIELD_NAME);
 
         while (iterator.hasNext()) {

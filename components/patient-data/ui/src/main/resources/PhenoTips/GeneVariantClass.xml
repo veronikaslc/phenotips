@@ -238,7 +238,7 @@ $!{value}
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>rare=Rare (MAF less than 0.01)|predicted=Predicted damaging by in silico models|reported=Reported in other individuals|segregates=Segregates with phenotype within family</values>
+      <values>rare=Rare (MAF less than 0.01)|predicted=Predicted damaging by in silico models|reported=Reported in other affected individuals</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </evidence>
     <segregation>
@@ -259,7 +259,7 @@ $!{value}
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>NA= |complete=Complete|in_progress=In progress|not_done=Not done</values>
+      <values>NA= |segregates=Segregates|not_segregates=Does not segregate</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </segregation>
     <sanger>
@@ -280,29 +280,8 @@ $!{value}
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>NA= |complete=Complete|in_progress=In progress|not_done=Not done</values>
+      <values>NA= |positive=Positive|negative=Negative</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </sanger>
-    <resolution>
-      <cache>0</cache>
-      <customDisplay/>
-      <disabled>0</disabled>
-      <displayType>select</displayType>
-      <multiSelect>0</multiSelect>
-      <name>resolution</name>
-      <number>13</number>
-      <picker>0</picker>
-      <prettyName>Resolution</prettyName>
-      <relationalStorage>0</relationalStorage>
-      <separator> </separator>
-      <separators> ,|</separators>
-      <size>1</size>
-      <sort>none</sort>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <values>NA= |unknown=Unknown|rejected=Rejected|solved=Confirmed causal</values>
-      <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-    </resolution>
   </class>
 </xwikidoc>

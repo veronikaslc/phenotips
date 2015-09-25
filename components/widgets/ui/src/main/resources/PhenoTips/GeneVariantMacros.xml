@@ -393,7 +393,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
       if ( this.areaEditDataListenerArray.indexOf(varIndex) &lt; 0 ) {
         this.areaEditDataListenerArray.push(varIndex);
         document.observe('click', function (event) {
-          if (!event.element().up('.variant-moreinfo-editbutton-row.variant-'+varIndex)){
+          if (!event.element().up('.variant-'+varIndex)){
             $$('.variant-'+varIndex+' a.variant-edit-done').invoke('click');
           }
         });
@@ -670,7 +670,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
       newVariantRow.insert(varRowInner);
       variantFooter.insert({before : newVariantRow});
 
-      var newMoreInfoRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' v-collapsed variant-moreinfo-row variant-hide-heading-'+geneIndex});
+      var newMoreInfoRow = new Element('tr', {'class' : 'variant-gene-'+geneIndex+' variant-moreinfo-row variant-hide-heading-'+geneIndex});
       var varMoreInfoInner = this.moreInfoSectionTemplate.evaluate(data);
       varMoreInfoInner = varMoreInfoInner.replace(/_\d+_|=\d+&amp;|\$\{object.xWikiClass.name\}|\$\{object.number\}/g, function (placeholder) {return evaluateTemplate(placeholder)});
       newMoreInfoRow.insert(varMoreInfoInner);
@@ -683,15 +683,16 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
 
       newMoreInfoRow.select('a.variant-edit').invoke('observe', 'click', this.editData.bindAsEventListener(this));
       newMoreInfoRow.select('a.variant-edit-done').invoke('observe', 'click', this.editDoneData.bindAsEventListener(this));
-      //invoking click event to hide rows with empty inputs in 'more info' section
-      newMoreInfoRow.select('a.variant-edit-done').invoke('click');
+      //invoking click event to show rows with empty inputs in 'more info' section
+      newMoreInfoRow.select('a.variant-edit').invoke('click');
 
       this.createShowMoreinfoButtons('td.variant-row-count.variant-'+varIndex);
 
       newMoreInfoRow.select('.variant-moreinfo-editbutton-row tr').each( function(item) {
         item.toggleClassName('moreinfo-view', true);
       });
-      $$('.variant.moreinfo').invoke('observe', 'click', this.areaEditData.bindAsEventListener(this));
+      newMoreInfoRow.select('.variant.moreinfo').invoke('observe', 'click', this.areaEditData.bindAsEventListener(this));
+      newMoreInfoRow.select('.variant.moreinfo').invoke('click');
 
       $(this.geneVariantClassName+'_'+varIndex+'_genesymbol').value = geneSymbol;
           
@@ -733,9 +734,8 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
     createEditDoneButtons : function (className) {
       $$(className).each(function(row) {
         var variantIndex = row.className.substring(row.className.lastIndexOf('-')+1);
-        var editVariantLink = new Element('a', {'class' : 'action-edit button secondary variant-edit-done fa fa-check v-collapsed', 'href' : '#', 'title' : "$services.localization.render('PhenoTips.GeneVariantClass.editDone.hint')", id : 'PhenoTips.GeneVariantClass_'+variantIndex+'_editDone', 'style' : 'font-size: 90%'}).update(' OK');
-        var editVarientWrapper = new Element('span', {'class' : 'buttonwrapper variant-moreinfo-button', 'style' : 'margin: 0'}).insert(editVariantLink);
-        row.insert(editVarientWrapper);
+        var editVariantLink = new Element('a', {'class' : 'action-edit variant-edit-done v-collapsed', 'href' : '#', id : 'PhenoTips.GeneVariantClass_'+variantIndex+'_editDone'});
+        row.insert(editVariantLink);
       });
     },
     
@@ -861,9 +861,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
 
 document.observe('xwiki:dom:loaded', function() {
   new ExtraGeneVariantData.tools.Editor();
-})
-
-</code>
+})</code>
     </property>
     <property>
       <name></name>

@@ -95,8 +95,6 @@ public class VariantListController extends AbstractComplexController<Map<String,
 
     private static final String VARIANTS_SANGER_ENABLING_FIELD_NAME = "variants_sanger";
 
-    private static final String VARIANTS_RESOLUTION_ENABLING_FIELD_NAME = "variants_resolution";
-
     private static final String VARIANT_KEY = "cdna";
 
     private static final String GENESYMBOL_KEY = "genesymbol";
@@ -121,8 +119,6 @@ public class VariantListController extends AbstractComplexController<Map<String,
 
     private static final String SANGER_KEY = "sanger";
 
-    private static final String RESOLUTION_KEY = "resolution";
-
     @Inject
     private Logger logger;
 
@@ -143,7 +139,7 @@ public class VariantListController extends AbstractComplexController<Map<String,
     {
         return Arrays.asList(VARIANT_KEY, GENESYMBOL_KEY, PROTEIN_KEY, TRANSCRIPT_KEY, DBSNP_KEY, ZYGOSITY_KEY,
             EFFECT_KEY,
-            INTERPRETATION_KEY, INHERITANCE_KEY, EVIDENCE_KEY, SEGREGATION_KEY, SANGER_KEY, RESOLUTION_KEY);
+            INTERPRETATION_KEY, INHERITANCE_KEY, EVIDENCE_KEY, SEGREGATION_KEY, SANGER_KEY);
     }
 
     @Override
@@ -245,9 +241,7 @@ public class VariantListController extends AbstractComplexController<Map<String,
 
         List<String> keys =
             Arrays.asList(GENESYMBOL_KEY, PROTEIN_KEY, TRANSCRIPT_KEY, DBSNP_KEY, ZYGOSITY_KEY, EFFECT_KEY,
-                INTERPRETATION_KEY,
-                INHERITANCE_KEY, EVIDENCE_KEY, SANGER_KEY, SEGREGATION_KEY,
-                RESOLUTION_KEY);
+                INTERPRETATION_KEY, INHERITANCE_KEY, EVIDENCE_KEY, SANGER_KEY, SEGREGATION_KEY);
         Map<String, String> enablingPropertiesMap = new HashMap<String, String>();
         enablingPropertiesMap.put(GENESYMBOL_KEY, VARIANTS_GENESYMBOL_ENABLING_FIELD_NAME);
         enablingPropertiesMap.put(PROTEIN_KEY, VARIANTS_PROTEIN_ENABLING_FIELD_NAME);
@@ -260,7 +254,6 @@ public class VariantListController extends AbstractComplexController<Map<String,
         enablingPropertiesMap.put(EVIDENCE_KEY, VARIANTS_EVIDENCE_ENABLING_FIELD_NAME);
         enablingPropertiesMap.put(SEGREGATION_KEY, VARIANTS_SEGREGATION_ENABLING_FIELD_NAME);
         enablingPropertiesMap.put(SANGER_KEY, VARIANTS_SANGER_ENABLING_FIELD_NAME);
-        enablingPropertiesMap.put(RESOLUTION_KEY, VARIANTS_RESOLUTION_ENABLING_FIELD_NAME);
 
         while (iterator.hasNext()) {
             Map<String, String> item = iterator.next();

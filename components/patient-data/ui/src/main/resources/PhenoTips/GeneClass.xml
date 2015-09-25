@@ -63,27 +63,27 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
     </comments>
-    <evidence>
+    <strategy>
       <cache>0</cache>
       <customDisplay/>
       <disabled>0</disabled>
-      <displayType>select</displayType>
+      <displayType>checkbox</displayType>
       <multiSelect>0</multiSelect>
-      <name>evidence</name>
+      <name>Strategy</name>
       <number>4</number>
       <picker>0</picker>
-      <prettyName>Evidence</prettyName>
+      <prettyName>Strategy</prettyName>
       <relationalStorage>0</relationalStorage>
-      <separator> </separator>
+      <separator>; </separator>
       <separators> ,|</separators>
       <size>1</size>
       <sort>none</sort>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>NA= |biological_relevance=Implicated in relevant biological process|significant_variant=Contains variant of functional significance|known_association=Verified association with relevant phenotype/disease</values>
+      <values>sequencing=Sequencing|deletion=Deletion/duplication|familial_mutation=Familial mutation/disease|common_mutations=Common mutations</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-    </evidence>
+    </strategy>
     <status>
       <cache>0</cache>
       <customDisplay/>
@@ -102,7 +102,7 @@
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>NA= |candidate=Candidate|rejected=Excluded by testing|solved=Confirmed causal</values>
+      <values>NA= |candidate=Candidate|rejected=Negative|solved=Confirmed causal</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </status>
     <gene>

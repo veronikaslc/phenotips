@@ -119,7 +119,7 @@ $xwiki.jsx.use('PhenoTips.UIX_Field__genes')##
 #set ($geneClassName = 'PhenoTips.GeneClass')
 #set ($variantClassName = 'PhenoTips.GeneVariantClass')
 === $services.localization.render('phenotips.UIXField.genes.sheetTitle')===
-#__gene_table($geneClassName, $variantClassName, {'mode' : $xcontext.action, 'defaultProperties' : ['cdna', 'interpretation', 'resolution'], 'inputStrings' : ['cdna', 'protein','transcript','dbsnp']})
+#__gene_table($geneClassName, $variantClassName, {'mode' : $xcontext.action, 'defaultProperties' : ['cdna', 'interpretation', 'zygosity'], 'inputStrings' : ['cdna', 'protein','transcript','dbsnp']})
 {{/velocity}}</content>
     </property>
     <property>

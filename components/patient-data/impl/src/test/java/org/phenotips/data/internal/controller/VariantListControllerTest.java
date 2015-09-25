@@ -109,8 +109,6 @@ public class VariantListControllerTest
 
     private static final String VARIANTS_SANGER_ENABLING_FIELD_NAME = "variants_sanger";
 
-    private static final String VARIANTS_RESOLUTION_ENABLING_FIELD_NAME = "variants_resolution";
-
     private static final String VARIANT_KEY = "cdna";
 
     private static final String GENESYMBOL_KEY = "genesymbol";
@@ -134,8 +132,6 @@ public class VariantListControllerTest
     private static final String SEGREGATION_KEY = "segregation";
 
     private static final String SANGER_KEY = "sanger";
-
-    private static final String RESOLUTION_KEY = "resolution";
 
     @Before
     public void setUp() throws Exception
@@ -170,7 +166,7 @@ public class VariantListControllerTest
         List<String> result =
             ((AbstractComplexController<Map<String, String>>) this.mocker.getComponentUnderTest()).getProperties();
 
-        Assert.assertEquals(13, result.size());
+        Assert.assertEquals(12, result.size());
         Assert.assertThat(result, Matchers.hasItem(VARIANT_KEY));
         Assert.assertThat(result, Matchers.hasItem(GENESYMBOL_KEY));
         Assert.assertThat(result, Matchers.hasItem(PROTEIN_KEY));
@@ -183,7 +179,6 @@ public class VariantListControllerTest
         Assert.assertThat(result, Matchers.hasItem(EVIDENCE_KEY));
         Assert.assertThat(result, Matchers.hasItem(SEGREGATION_KEY));
         Assert.assertThat(result, Matchers.hasItem(SANGER_KEY));
-        Assert.assertThat(result, Matchers.hasItem(RESOLUTION_KEY));
     }
 
     @Test
@@ -261,19 +256,6 @@ public class VariantListControllerTest
         Assert.assertEquals("likely_benign", result.get(2).get(INTERPRETATION_KEY));
         Assert.assertEquals("benign", result.get(3).get(INTERPRETATION_KEY));
         Assert.assertEquals("variant_u_s", result.get(4).get(INTERPRETATION_KEY));
-    }
-
-    @Test
-    public void checkLoadParsingOfResolutionKey() throws ComponentLookupException
-    {
-        addVariantFields(RESOLUTION_KEY, new String[] { "solved", "rejected", "unknown" });
-
-        PatientData<Map<String, String>> result = this.mocker.getComponentUnderTest().load(this.patient);
-
-        Assert.assertNotNull(result);
-        Assert.assertEquals("solved", result.get(0).get(RESOLUTION_KEY));
-        Assert.assertEquals("rejected", result.get(1).get(RESOLUTION_KEY));
-        Assert.assertEquals("unknown", result.get(2).get(RESOLUTION_KEY));
     }
 
     @Test
@@ -509,7 +491,6 @@ public class VariantListControllerTest
         item.put(EVIDENCE_KEY, "Evidence");
         item.put(SANGER_KEY, "Sanger");
         item.put(SEGREGATION_KEY, "Segregation");
-        item.put(RESOLUTION_KEY, "Resolution");
         item.put(ZYGOSITY_KEY, "Zygosity");
         internalList.add(item);
 
@@ -528,7 +509,6 @@ public class VariantListControllerTest
         selectedFields.add(VARIANTS_EVIDENCE_ENABLING_FIELD_NAME);
         selectedFields.add(VARIANTS_SEGREGATION_ENABLING_FIELD_NAME);
         selectedFields.add(VARIANTS_SANGER_ENABLING_FIELD_NAME);
-        selectedFields.add(VARIANTS_RESOLUTION_ENABLING_FIELD_NAME);
         selectedFields.add(VARIANTS_ZYGOSITY_ENABLING_FIELD_NAME);
 
         this.mocker.getComponentUnderTest().writeJSON(this.patient, json, selectedFields);
@@ -557,7 +537,6 @@ public class VariantListControllerTest
         item.put(EVIDENCE_KEY, "Evidence");
         item.put(SANGER_KEY, "Sanger");
         item.put(SEGREGATION_KEY, "Segregation");
-        item.put(RESOLUTION_KEY, "Resolution");
         item.put(ZYGOSITY_KEY, "Zygosity");
         internalList.add(item);
         patientData = new IndexedPatientData<>(CONTROLLER_NAME, internalList);

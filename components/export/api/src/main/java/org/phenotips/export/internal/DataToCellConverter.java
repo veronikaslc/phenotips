@@ -245,7 +245,7 @@ public class DataToCellConverter
         { "variants", "variants_protein", "variants_transcript", "variants_dbsnp", "variants_zygosity",
         "variants_effect",
         "variants_interpretation", "variants_inheritance", "variants_evidence", "variants_segregation",
-        "variants_sanger", "variants_resolution" };
+        "variants_sanger" };
         // FIXME These will not work properly in different configurations
         String[][] headerIds =
         {
@@ -262,9 +262,7 @@ public class DataToCellConverter
         { "segregation", "evidence", "inheritance", "interpretation", "effect", "zygosity", "dbsnp", "transcript",
         "protein", "cdna" },
         { "sanger", "segregation", "evidence", "inheritance", "interpretation", "effect", "zygosity", "dbsnp",
-        "transcript", "protein", "cdna" },
-        { "resolution", "sanger", "segregation", "evidence", "inheritance", "interpretation", "effect", "zygosity",
-        "dbsnp", "transcript", "protein", "cdna" } };
+        "transcript", "protein", "cdna" } };
         Set<String> present = addHeaders(fieldIds, headerIds, enabledFields);
         this.enabledHeaderIdsBySection.put(sectionName, present);
     }
@@ -272,11 +270,11 @@ public class DataToCellConverter
     public void genesSetup(Set<String> enabledFields) throws Exception
     {
         String sectionName = "genes";
-        String[] fieldIds = { "genes", "genes_status", "genes_evidence", "genes_comments" };
+        String[] fieldIds = { "genes", "genes_status", "genes_strategy", "genes_comments" };
         // FIXME These will not work properly in different configurations
         String[][] headerIds =
-        { { "genes" }, { "status", "genes" }, { "evidence", "status", "genes" },
-        { "comments", "evidence", "status", "genes" } };
+        { { "genes" }, { "status", "genes" }, { "strategy", "status", "genes" },
+        { "comments", "strategy", "status", "genes" } };
         Set<String> present = addHeaders(fieldIds, headerIds, enabledFields);
         this.enabledHeaderIdsBySection.put(sectionName, present);
     }
@@ -294,7 +292,7 @@ public class DataToCellConverter
         DataCell cell = new DataCell("Gene Name", hX, 1, StyleOption.HEADER);
         section.addCell(cell);
         hX++;
-        List<String> fields = Arrays.asList("status", "evidence", "comments");
+        List<String> fields = Arrays.asList("status", "strategy", "comments");
 
         for (String field : fields) {
             if (!present.contains(field)) {
@@ -332,7 +330,7 @@ public class DataToCellConverter
 
         List<String> fields =
             Arrays.asList("protein", "transcript", "dbsnp", "zygosity", "effect", "interpretation", "inheritance",
-                "evidence", "segregation", "sanger", "resolution");
+                "evidence", "segregation", "sanger");
         Map<String, String> headerTranslates = new HashMap<String, String>();
         headerTranslates.put("dbsnp", "db SNP");
         headerTranslates.put("segregation", "Segregation Studies");
@@ -381,17 +379,15 @@ public class DataToCellConverter
         List<String> fields =
             Arrays.asList("protein", "transcript", "dbsnp", "zygosity", "effect",
                 "interpretation", "inheritance",
-                "evidence", "segregation", "sanger", "resolution");
+                "evidence", "segregation", "sanger");
         List<String> translatables =
-            Arrays.asList("effect", "interpretation", "inheritance", "segregation", "sanger", "resolution");
+            Arrays.asList("effect", "interpretation", "inheritance", "segregation", "sanger");
 
         Map<String, String> valueTranslates = new HashMap<String, String>();
         valueTranslates.put("likely_pathogenic", "Likely Pathogenic");
         valueTranslates.put("likely_benign", "Likely Benign");
         valueTranslates.put("variant_u_s", "Variant of Unknown Significance");
-        valueTranslates.put("in_progress", "In progress");
-        valueTranslates.put("not_done", "Not done");
-        valueTranslates.put("solved", "Confirmed causal");
+        valueTranslates.put("not_segregates", "Does not segregate");
         valueTranslates.put("denovo_germline", "de novo germline");
         valueTranslates.put("denovo_s_mosaicism", "de novo somatic mosaicism");
         valueTranslates.put("insertion_in_frame", "insertion - in frame");
@@ -402,8 +398,8 @@ public class DataToCellConverter
         valueTranslates.put("indel_frameshift", "indel - frameshift");
         valueTranslates.put("repeat_expansion", "repeat expansion");
         List<String> upperCase =
-            Arrays.asList("pathogenic", "benign", "complete", "rejected", "unknown", "missense", "nonsense",
-                "duplication", "synonymous", "other", "maternal", "paternal");
+            Arrays.asList("pathogenic", "benign", "unknown", "missense", "nonsense", "segregates",
+                "duplication", "synonymous", "other", "maternal", "paternal", "negative", "positive");
 
         for (Map<String, String> variant : variants) {
             int x = 0;
@@ -466,13 +462,14 @@ public class DataToCellConverter
             return section;
         }
 
-        List<String> fields = Arrays.asList("status", "evidence", "comments");
+        List<String> fields = Arrays.asList("status", "strategy", "comments");
         Map<String, String> valueTranslates = new HashMap<String, String>();
-        valueTranslates.put("biological_relevance", "Implicated in relevant biological process");
-        valueTranslates.put("significant_variant", "Contains variant of functional significance");
-        valueTranslates.put("known_association", "Verified association with relevant phenotype/disease");
+        valueTranslates.put("sequencing", "Sequencing");
+        valueTranslates.put("deletion", "Deletion/duplication");
+        valueTranslates.put("familial_mutation", "Familial mutation");
+        valueTranslates.put("common_mutations", "Common mutations");
         valueTranslates.put("solved", "Confirmed causal");
-        valueTranslates.put("rejected", "Excluded by testing");
+        valueTranslates.put("rejected", "Negative");
         valueTranslates.put("candidate", "Candidate");
 
         DataCell cell = new DataCell("Genes", 0, y);
@@ -1446,8 +1443,7 @@ public class DataToCellConverter
         Map<String, String> valueTranslates = new HashMap<String, String>();
         valueTranslates.put("rare", "Rare (MAF<0.01); ");
         valueTranslates.put("predicted", "Predicted damaging by in silico models; ");
-        valueTranslates.put("reported", "Reported in other individuals; ");
-        valueTranslates.put("segregates", "Segregates with phenotype within family; ");
+        valueTranslates.put("reported", "Reported in other affected individuals; ");
         String field = "";
         for (String property : valueTranslates.keySet()) {
             if (value.contains(property)) {
