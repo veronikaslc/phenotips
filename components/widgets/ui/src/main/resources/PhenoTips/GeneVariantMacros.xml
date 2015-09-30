@@ -516,6 +516,8 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
 
       newGeneRow.down('a.delete-gene').observe('click', this.ajaxDeleteGeneData.bindAsEventListener(this));
       $$('tr.variant-gene-'+geneIndex+' a.add-variant')[0].observe('click', this.ajaxAddVariantData.bindAsEventListener(this));
+      
+      $('PhenoTips.GeneClass_' + geneIndex + '_status').value = "candidate";
 
       var geneLabel = new Element('p', {'class' : ' gene col-label gene-' + geneIndex + ' gene-input-label v-collapsed'});
       newGeneRow.down('.suggested.suggest-gene.gene-name').insert({before: geneLabel});

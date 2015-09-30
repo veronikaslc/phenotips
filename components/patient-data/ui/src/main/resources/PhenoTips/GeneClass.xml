@@ -102,7 +102,7 @@
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>NA= |candidate=Candidate|rejected=Negative|solved=Confirmed causal</values>
+      <values>candidate=Candidate|rejected=Negative|solved=Confirmed causal</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </status>
     <gene>
