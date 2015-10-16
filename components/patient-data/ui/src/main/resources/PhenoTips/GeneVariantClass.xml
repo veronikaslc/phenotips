@@ -175,7 +175,7 @@ $!{value}
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <values>NA= |missense=missense|nonsense=nonsense|insertion_in_frame=insertion - in frame|insertion_frameshift=insertion - frameshift|deletion_in_frame=deletion - in frame|deletion_frameshift=deletion - frameshift|indel_in_frame=indel - in frame|indel_frameshift=indel - frameshift|duplication=duplication|repeat_expansion=repeat expansion|synonymous=synonymous|other=other</values>
+      <values>NA= |SO:0001583=missense|SO:0001587=nonsense|SO:0001821=insertion - in frame|SO:0001909=insertion - frameshift|SO:0001822=deletion - in frame|SO:0001910=deletion - frameshift|SO:0001820=indel - in frame|SO:0001589=indel - frameshift|SO:1000035=duplication|SO:1000173=repeat expansion|SO:0001819=synonymous|SO:0001060=other</values>
       <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
     </effect>
     <interpretation>
