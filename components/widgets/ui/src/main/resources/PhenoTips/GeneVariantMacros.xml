@@ -560,7 +560,9 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
               //we are removing variant from the middle of the table-> updating table count
               dataRow.next().remove();
               dataRow.remove();
-              var innerText = deleteTrigger.up('tr').select('.variant-row-count.variant')[0].innerText;
+              var element = deleteTrigger.up('tr').select('.variant-row-count.variant')[0];
+              // Get inner text in cross-browser manner
+              var innerText = element.textContent || element.innerText;
               var geneCount = innerText.substring(0, innerText.indexOf('.'));
               var i = 1;
               $$('.variant-hide-heading-' + geneIndex + ' .variant-row-count').each(function(item) {
@@ -835,9 +837,12 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
         } else if (labels[i].className.indexOf('evidence') > -1) {
           labels[i].innerHTML = "";
           inputs[i].childElements().each( function(item) {
-            if (item.tagName == "LABEL" &amp;&amp; item.firstDescendant().checked)
-              labels[i].innerHTML +=item.innerText+'; ';
-            });
+            if (item.tagName == "LABEL" &amp;&amp; item.firstDescendant().checked) {
+              // Get inner text with cross-browser support
+              var innerText = item.textContent || item.innerText;
+              labels[i].innerHTML += innerText + '; ';
+            }
+          });
         } else {
           labels[i].innerHTML = inputs[i].firstChild.value;
         }
