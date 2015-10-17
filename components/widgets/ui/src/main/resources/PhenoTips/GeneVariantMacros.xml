@@ -48,20 +48,20 @@ $xwiki.ssx.use('PhenoTips.GeneVariantMacros')##
 ## -----------Add/Delete buttons macros-------------------
 ##
 #macro (__gene_addTool $classname)
- {{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative">&lt;label class="create-button-label">+&lt;/label>&lt;a class="button add-gene add-data-button" href="$doc.getURL('objectadd', "classname=${classname}&amp;amp;xpage=plain&amp;amp;xaction=lastentry&amp;amp;withLabel=false&amp;amp;form_token=$!{services.csrf.getToken()}")" title="$services.localization.render("$!{classname}.geneTable.newEntry")">$services.localization.render("$!{classname}.geneTable.newEntry")&lt;/a>&lt;/span>{{/html}} {{icon name="question-circle" cssClass="xHelpButton" title="$services.localization.render("${classname}_hint").replace('"', '~~~"')"/}}
+ {{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative"&gt;&lt;label class="create-button-label"&gt;+&lt;/label&gt;&lt;a class="button add-gene add-data-button" href="$doc.getURL('objectadd', "classname=${classname}&amp;amp;xpage=plain&amp;amp;xaction=lastentry&amp;amp;withLabel=false&amp;amp;form_token=$!{services.csrf.getToken()}")" title="$services.localization.render("$!{classname}.geneTable.newEntry")"&gt;$services.localization.render("$!{classname}.geneTable.newEntry")&lt;/a&gt;&lt;/span&gt;{{/html}} {{icon name="question-circle" cssClass="xHelpButton" title="$services.localization.render("${classname}_hint").replace('"', '~~~"')"/}}
 #end
 ##
 #macro (__gene__deleteWithVariants__tool $geneObj $variantClassName)
-  {{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative">&lt;a class="action delete-gene button secondary" href="$doc.getURL('get', "geneclassname=${geneObj.xWikiClass.name}&amp;amp;variantclassname=$variantClassName&amp;amp;form_token=$!{services.csrf.getToken()}&amp;amp;action=deletegene&amp;amp;objnumber=$geneObj.number&amp;amp;gene=")" title="$services.localization.render('phenotips.tableMacros.delete')">✖&lt;/a>&lt;/span>{{/html}}##
+  {{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative"&gt;&lt;a class="action delete-gene button secondary" href="$doc.getURL('get', "geneclassname=${geneObj.xWikiClass.name}&amp;amp;variantclassname=$variantClassName&amp;amp;form_token=$!{services.csrf.getToken()}&amp;amp;action=deletegene&amp;amp;objnumber=$geneObj.number&amp;amp;gene=")" title="$services.localization.render('phenotips.tableMacros.delete')"&gt;✖&lt;/a&gt;&lt;/span&gt;{{/html}}##
 #end
 ##
 ##
 #macro (__variant_addTool $classname $genesymbol)
-{{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative">&lt;label class="create-button-label">+&lt;/label>&lt;a class="button add-variant add-data-button" href="$doc.getURL('objectadd', "classname=${classname}&amp;amp;xpage=plain&amp;amp;xaction=lastentry&amp;amp;withLabel=false&amp;amp;${classname}_genesymbol=$genesymbol&amp;amp;form_token=$!{services.csrf.getToken()}")" title="$services.localization.render("${classname}.variantTable.newEntry")"> $services.localization.render("${classname}.variantTable.newEntry")&lt;/a>&lt;/span>{{/html}} {{icon name="question-circle" cssClass="xHelpButton" title="$services.localization.render("${classname}.add.hint").replace('"', '~~~"')"/}}
+{{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative"&gt;&lt;label class="create-button-label"&gt;+&lt;/label&gt;&lt;a class="button add-variant add-data-button" href="$doc.getURL('objectadd', "classname=${classname}&amp;amp;xpage=plain&amp;amp;xaction=lastentry&amp;amp;withLabel=false&amp;amp;${classname}_genesymbol=$genesymbol&amp;amp;form_token=$!{services.csrf.getToken()}")" title="$services.localization.render("${classname}.variantTable.newEntry")"&gt; $services.localization.render("${classname}.variantTable.newEntry")&lt;/a&gt;&lt;/span&gt;{{/html}} {{icon name="question-circle" cssClass="xHelpButton" title="$services.localization.render("${classname}.add.hint").replace('"', '~~~"')"/}}
 #end
 ##
 #macro (__variant__deleteTool $object)
-{{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative; float: right;">&lt;a class="action delete-variant button secondary" style="margin-top : 0" href="$doc.getURL('objectremove', "classname=${object.xWikiClass.name}&amp;amp;classid=${object.number}&amp;amp;form_token=$!{services.csrf.getToken()}")" title="$services.localization.render('phenotips.tableMacros.delete')">✖&lt;/a>&lt;/span>{{/html}}##
+{{html clean="false"}}&lt;span class="buttonwrapper" style="position : relative; float: right;"&gt;&lt;a class="action delete-variant button secondary" style="margin-top : 0" href="$doc.getURL('objectremove', "classname=${object.xWikiClass.name}&amp;amp;classid=${object.number}&amp;amp;form_token=$!{services.csrf.getToken()}")" title="$services.localization.render('phenotips.tableMacros.delete')"&gt;✖&lt;/a&gt;&lt;/span&gt;{{/html}}##
 #end
 ##
 ##
@@ -165,7 +165,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
 ##
 ##
 #macro(__variant_table $variantObjects $geneNumber $geneObjNumber $options $genesymbol $variantClassName)##
-#if ($variantObjects.size() > 0)##
+#if ($variantObjects.size() &gt; 0)##
 (%class="variant-gene-$geneObjNumber variant-title-row"%)#__variant_head($variantObjects.size() $geneObjNumber $genesymbol $variantClassName $options)
 #foreach ($o in $variantObjects)
 #set ($variantIndex = $o.number)
@@ -483,7 +483,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
       
       var idx = dataTable.select('td.row-count').size() + 1;
       var geneIndex = 0;
-      if (dataTable.select('td.row-count').size() > 0) {
+      if (dataTable.select('td.row-count').size() &gt; 0) {
         var className = dataTable.select('td.row-count')[idx - 2].next().className;
         geneIndex = parseInt(className.substring(className.lastIndexOf('-')+1), 10) + 1;
       }
@@ -557,7 +557,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
               dataRow.next().remove();
               dataRow.remove();
             } else {
-              //we are removing variant from the middle of the table-> updating table count
+              //we are removing variant from the middle of the table-&gt; updating table count
               dataRow.next().remove();
               dataRow.remove();
               var element = deleteTrigger.up('tr').select('.variant-row-count.variant')[0];
@@ -780,7 +780,7 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
         var geneLabel = new Element('p', {'class' : ' gene col-label gene-' + geneIndex + ' gene-input-label'});
         geneLabel.update(item.value);
         item.insert({before: geneLabel});
-        if ($$('.variant-hide-heading-' + geneIndex).length > 0) {
+        if ($$('.variant-hide-heading-' + geneIndex).length &gt; 0) {
           item.toggleClassName('v-collapsed', true);
         } else {
           geneLabel.toggleClassName('v-collapsed', true);
@@ -832,9 +832,9 @@ $doc.display($prop.getName(), 'view', $fakeObj )##
       for (var i=0;i&lt;inputs.length;i++) {
       
         inputs[i].toggleClassName('v-collapsed', true);
-        if (labels[i].className.indexOf('segregation') > -1 || labels[i].className.indexOf('sanger') > -1 || labels[i].className.indexOf('inheritance') > -1 || labels[i].className.indexOf('zygosity') > -1 || labels[i].className.indexOf('effect') > -1) {
+        if (labels[i].className.indexOf('segregation') &gt; -1 || labels[i].className.indexOf('sanger') &gt; -1 || labels[i].className.indexOf('inheritance') &gt; -1 || labels[i].className.indexOf('zygosity') &gt; -1 || labels[i].className.indexOf('effect') &gt; -1) {
           labels[i].innerHTML = inputs[i].firstChild[inputs[i].firstChild.selectedIndex].text;
-        } else if (labels[i].className.indexOf('evidence') > -1) {
+        } else if (labels[i].className.indexOf('evidence') &gt; -1) {
           labels[i].innerHTML = "";
           inputs[i].childElements().each( function(item) {
             if (item.tagName == "LABEL" &amp;&amp; item.firstDescendant().checked) {
@@ -871,7 +871,7 @@ document.observe('xwiki:dom:loaded', function() {
 })</code>
     </property>
     <property>
-      <name></name>
+      <name/>
     </property>
     <property>
       <parse>1</parse>
@@ -991,7 +991,7 @@ document.observe('xwiki:dom:loaded', function() {
           if (item.next() != el)
             genesymbols.push(item.innerText);
         });
-        if (genesymbols.indexOf(el.value) > -1) {
+        if (genesymbols.indexOf(el.value) &gt; -1) {
           this.invalid();
         } else {
           this.available();
@@ -1039,7 +1039,7 @@ document.observe('xwiki:dom:loaded', function() {
       if (item.next() != inputElement)
         genesymbols.push(item.innerText);
     });
-    if (genesymbols.indexOf(event.memo.value) > -1) {
+    if (genesymbols.indexOf(event.memo.value) &gt; -1) {
       inputElement.__Gene_validator.input.value = event.memo.value;
       inputElement.__Gene_validator.validate(event.memo.value);
     } else {
@@ -1167,7 +1167,7 @@ document.observe('xwiki:dom:loaded', function() {
           if (item != el)
             cdnas.push(item.value);
         });
-        if (cdnas.indexOf(el.value) > -1) {
+        if (cdnas.indexOf(el.value) &gt; -1) {
           this.invalid();
         } else {
           this.available();
@@ -1525,7 +1525,7 @@ a.action-edit.secondary.variant-edit:hover, a.action-edit.secondary.variant-edit
       <contentType>CSS</contentType>
     </property>
     <property>
-      <name></name>
+      <name/>
     </property>
     <property>
       <parse>1</parse>
