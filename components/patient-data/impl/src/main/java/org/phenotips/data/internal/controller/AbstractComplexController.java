@@ -139,6 +139,14 @@ public abstract class AbstractComplexController<T> implements PatientDataControl
     }
 
     /**
+     * @return name of controlling field which is responsible for export fields grouping
+     */
+    protected String getControllingFieldName(String field)
+    {
+        return field;
+    }
+
+    /**
      * @return list of fields which should be resolved to booleans
      */
     protected abstract List<String> getBooleanFields();
